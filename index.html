@@ -56,7 +56,7 @@
         .section-title { font-size: 0.85rem; font-weight: 800; color: var(--accent-color); text-transform: uppercase; margin-top: 2rem; display: flex; align-items: center; gap: 8px; }
         .section-title::after { content: ''; height: 2px; flex: 1; background: var(--border-color); }
 
-        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s ease; font-size: 1rem; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s ease; font-size: 1rem; text-decoration: none; font-family: inherit; }
         .btn:active { transform: scale(0.96); }
         .btn-primary { background: var(--accent-gradient); color: white; }
         .btn-reguler { background: var(--bg-light); color: var(--text-color); border: 1px solid var(--border-color); }
@@ -74,13 +74,14 @@
         .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4rem; cursor: pointer; }
 
-        .mobile-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-item { text-align: center; color: var(--secondary-color); font-size: 0.7rem; cursor: pointer; opacity: 0.6; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-        .nav-item.active { color: var(--accent-color); opacity: 1; font-weight: 700; }
-
         /* --- TOAST --- */
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--accent-gradient); color: white; padding: 12px 25px; border-radius: 50px; font-weight: 600; z-index: 10000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
         #toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* --- MOBILE NAV --- */
+        .mobile-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .nav-item { text-align: center; color: var(--secondary-color); font-size: 0.7rem; cursor: pointer; opacity: 0.6; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        .nav-item.active { color: var(--accent-color); opacity: 1; font-weight: 700; }
 
         /* --- PAGE SYSTEM --- */
         .page { display: none; padding-top: 90px; min-height: 100vh; animation: fadeIn 0.4s ease; }
@@ -196,14 +197,22 @@
     </div>
 
     <div id="page-payment" class="page container" style="text-align: center;">
-        <h2 style="margin-bottom:10px;">Metode Pembayaran</h2>
+        <h2 style="margin-bottom:10px;">Pembayaran</h2>
         <div class="card">
-            <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.7;">Silakan scan atau simpan gambar di bawah ini:</p>
+            <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.7;">Scan atau download QRIS berikut:</p>
             
-            <img src="qris.jpg" alt="QRIS Pembayaran" style="width:100%; max-width:250px; border-radius:20px; border:3px solid var(--accent-color); padding:5px; background:white;">
+            <div style="background: white; padding: 10px; border-radius: 20px; display: inline-block; border: 3px solid var(--accent-color); margin-bottom: 15px;">
+                <img src="qris.jpg" alt="QRIS" style="width:100%; max-width:250px; border-radius: 12px; display: block;">
+            </div>
+
+            <a href="qris.jpg" download="QRIS_ZinZen.jpg" class="btn btn-reguler" style="margin-bottom: 15px;">
+                <i data-lucide="download"></i> Download QRIS
+            </a>
             
             <p style="font-weight: 800; font-size: 1.3rem; color: #e74c3c; margin-top: 15px;">TOTAL: <span id="final-price"></span></p>
-            <button class="btn btn-success" style="margin-top: 20px;" onclick="sendWhatsApp()"><i data-lucide="message-circle"></i> Kirim Bukti Transfer</button>
+            <button class="btn btn-success" style="margin-top: 20px;" onclick="sendWhatsApp()">
+                <i data-lucide="message-circle"></i> Kirim Bukti Transfer
+            </button>
         </div>
     </div>
 
