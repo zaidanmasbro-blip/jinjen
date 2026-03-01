@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZinZen Official | XYZ AimHead Developer</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+
+    <style>
+        /* --- CORE SYSTEM & THEMES --- */
+        :root {
+            --primary-color: #2d3436; --secondary-color: #636e72; 
+            --accent-color: #0984e3; --accent-gradient: linear-gradient(135deg, #0984e3, #6c5ce7);
+            --bg-color: #ffffff; --bg-light: #f1f2f6; --card-bg: #ffffff;
+            --border-color: rgba(0,0,0,0.06); --text-color: #2d3436; --transition: 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a; --bg-light: #1e293b; --card-bg: #1e293b;
+            --border-color: rgba(255,255,255,0.05); --text-color: #f1f2f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); transition: var(--transition); padding-bottom: 80px; overflow-x: hidden; }
+        .container { max-width: 500px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* --- TOAST & LOADER --- */
+        #toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: var(--accent-gradient); color: white; padding: 12px 25px;
+            border-radius: 50px; font-weight: 600; font-size: 0.85rem; z-index: 10000;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3);
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        #theme-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 9999; color: white;
+        }
+        .gear-spin { animation: spin 1s linear infinite; color: var(--accent-color); }
+        .dots::after { content: ''; animation: dot-anim 1.5s infinite; }
+        @keyframes dot-anim { 0% { content: ''; } 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- NAVIGATION --- */
+        nav { padding: 1rem 0; position: fixed; width: 100%; top: 0; background: rgba(var(--bg-color), 0.8); backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4rem; cursor: pointer; }
+        .menu-btn { background: none; border: none; cursor: pointer; color: var(--text-color); display: flex; align-items: center; }
+
+        .sidebar { position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100%; background: var(--card-bg); z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 2rem; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+        .sidebar.active { left: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; backdrop-filter: blur(4px); }
+        .sidebar-overlay.active { display: block; }
+        .sidebar-item { display: flex; align-items: center; gap: 15px; font-weight: 600; text-decoration: none; color: var(--text-color); cursor: pointer; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+
+        /* --- PAGES --- */
+        .page { display: none; padding-top: 90px; min-height: 100vh; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- UI COMPONENTS --- */
+        .card { background: var(--card-bg); border-radius: 28px; border: 1px solid var(--border-color); padding: 1.8rem; margin-top: 1.2rem; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; text-decoration: none; font-size: 1rem; }
+        .btn-primary { background: var(--accent-gradient); color: white; }
+        .btn-success { background: #00b894; color: white; }
+        .btn-danger { background: #ff7675; color: white; }
+
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.75rem; color: var(--secondary-color); text-transform: uppercase; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-color); outline: none; font-family: inherit; }
+
+        .mobile-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; color: var(--secondary-color); font-size: 0.75rem; cursor: pointer; opacity: 0.6; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-item.active { color: var(--accent-color); font-weight: 700; opacity: 1; }
+
+        #timer { font-size: 1.6rem; font-weight: 800; color: #d63031; margin-bottom: 15px; }
+        .qris-box { background: white; padding: 12px; border-radius: 24px; width: 220px; margin: 20px auto; border: 4px solid var(--accent-color); }
+        .qris-box img { width: 100%; border-radius: 12px; }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div id="toast">Berhasil!</div>
+    <div id="theme-loader">
+        <i data-lucide="settings" class="gear-spin" style="width: 70px; height: 70px; margin-bottom: 20px;"></i>
+        <p style="font-weight: 700; font-size: 1.1rem; letter-spacing: 2px;">MENGGANTI TEMA<span class="dots"></span></p>
+    </div>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div class="logo">ZINZEN.</div>
+            <button class="menu-btn" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+        </div>
+        <div class="sidebar-item" onclick="showPage('home'); toggleSidebar()"><i data-lucide="home"></i> Beranda</div>
+        <div class="sidebar-item" onclick="showPage('store'); toggleSidebar()"><i data-lucide="shopping-bag"></i> Toko Modul</div>
+        <div class="sidebar-item" onclick="showPage('report'); toggleSidebar()" style="color: #ff7675;"><i data-lucide="shield-alert"></i> Lapor Kendala</div>
+        <div class="sidebar-item" onclick="showPage('links'); toggleSidebar()"><i data-lucide="link"></i> Social Media</div>
+        <hr style="opacity: 0.1; margin: 15px 0;">
+        <div class="sidebar-item" onclick="toggleTheme()"><i data-lucide="moon"></i> Ganti Tema</div>
+    </div>
+
+    <nav>
+        <div class="container nav-wrapper">
+            <button class="menu-btn" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+            <div class="logo" onclick="showPage('home')">ZINZEN.</div>
+            <button onclick="toggleTheme()" class="menu-btn"><i data-lucide="sun" id="t-icon"></i></button>
+        </div>
+    </nav>
+
+    <div id="page-home" class="page active container">
+        <section style="text-align: center; margin-bottom: 1.5rem;">
+            <h1>ZinZen <span id="typing" style="color:var(--accent-color)"></span></h1>
+            <p style="color:var(--secondary-color); font-size: 0.9rem;">Exclusive Android Optimization.</p>
+        </section>
+        <div class="card" style="background: var(--accent-gradient); color: white; border: none; text-align: center;">
+            <h2 style="font-size: 1.3rem;">XYZ AimHead V.1</h2>
+            <p style="font-size: 0.8rem; margin: 10px 0; opacity: 0.9;">Lenyapkan Lag, Naikkan FPS, Dominasi Permainan.</p>
+            <button class="btn" style="background: white; color: var(--accent-color);" onclick="showPage('store')">Dapatkan Sekarang</button>
+        </div>
+    </div>
+
+    <div id="page-store" class="page container">
+        <h2 style="text-align:center">Price List</h2>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div><h3>XYZ AimHead VIP</h3><p style="font-size: 0.8rem; color:var(--secondary-color);">Permanen & Anti Reset.</p></div>
+                <div style="font-weight:800; color:var(--accent-color);">IDR 50.000</div>
+            </div>
+            <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showPage('checkout')">Pesan Sekarang</button>
+        </div>
+    </div>
+
+    <div id="page-checkout" class="page container">
+        <button onclick="showPage('store')" style="background:none; border:none; color:var(--accent-color); cursor:pointer; margin-bottom:15px; font-weight: 700;">&larr; KEMBALI</button>
+        <div class="card">
+            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="c-name" placeholder="Nama anda"></div>
+            <div class="form-group"><label>Nomor WhatsApp</label><input type="number" id="c-phone" placeholder="08xxxxxxxxxx"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="form-group"><label>Tipe HP</label><input type="text" id="c-device" placeholder="Contoh: Poco F5"></div>
+                <div class="form-group">
+                    <label>Android</label>
+                    <select id="c-os">
+                        <option value="11">Andro 11</option><option value="12">Andro 12</option>
+                        <option value="13">Andro 13</option><option value="14" selected>Andro 14</option>
+                        <option value="15">Andro 15</option><option value="16+">Andro 16+</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ukuran RAM</label>
+                <select id="c-ram"><option>4 GB</option><option>6 GB</option><option selected>8 GB</option><option>12 GB+</option></select>
+            </div>
+            <button class="btn btn-primary" onclick="openPayment()">Lanjut Pembayaran</button>
+        </div>
+    </div>
+
+    <div id="page-payment" class="page container" style="text-align: center;">
+        <h2>Selesaikan Pembayaran</h2>
+        <div class="qris-box"><img src="https://i.ibb.co.com/8Lp1XqXF/490715.jpg" alt="QRIS"></div>
+        <p style="color:var(--secondary-color); font-size: 0.85rem; margin-bottom: 5px;">Scan QRIS di atas untuk membayar</p>
+        <div id="timer">15:00</div>
+        <p style="color: #e74c3c; font-weight: 800; font-size: 0.8rem; margin-bottom: 20px;">WAJIB KIRIM BUKTI SETELAH TRANSFER!</p>
+        <a id="wa-link" href="#" target="_blank" class="btn btn-success"><i data-lucide="message-circle"></i> Konfirmasi ke WhatsApp</a>
+    </div>
+
+    <div id="page-report" class="page container">
+        <h2 style="text-align:center">Lapor Kendala</h2>
+        <div class="card">
+            <div class="form-group"><label>Nama</label><input type="text" id="r-name"></div>
+            <div class="form-group"><label>Jenis Kendala</label>
+                <select id="r-type"><option>Lisensi Invalid</option><option>Modul Error</option><option>Lag / FPS Drop</option></select>
+            </div>
+            <div class="form-group"><label>Detail Masalah</label><textarea id="r-msg" rows="3"></textarea></div>
+            <button class="btn btn-danger" onclick="sendReport()">Kirim Laporan</button>
+        </div>
+    </div>
+
+    <div id="page-links" class="page container">
+        <h2 style="text-align: center;">Social Media</h2>
+        <div style="display: grid; gap: 15px; margin-top: 20px;">
+            <a href="https://www.tiktok.com/@jinjennn12" target="_blank" class="card" style="text-decoration:none; display:flex; align-items:center; gap:15px; margin:0; padding: 1.2rem;">
+                <div style="background: #000; color: white; padding: 10px; border-radius: 12px; display: flex;"><i data-lucide="video"></i></div>
+                <div><b>TikTok Official</b><br><small>Update Terbaru</small></div>
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb6tcwKIyPtOaK7gQE2Z" target="_blank" class="card" style="text-decoration:none; display:flex; align-items:center; gap:15px; margin:0; padding: 1.2rem;">
+                <div style="background: #25D366; color: white; padding: 10px; border-radius: 12px; display: flex;"><i data-lucide="message-circle"></i></div>
+                <div><b>Saluran WhatsApp</b><br><small>Join Komunitas</small></div>
+            </a>
+        </div>
+    </div>
+
+    <div class="mobile-nav">
+        <div class="nav-item active" id="m-home" onclick="showPage('home')"><i data-lucide="home"></i><div>Home</div></div>
+        <div class="nav-item" id="m-store" onclick="showPage('store')"><i data-lucide="shopping-bag"></i><div>Store</div></div>
+        <div class="nav-item" id="m-links" onclick="showPage('links')"><i data-lucide="link"></i><div>Links</div></div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        new TypeIt("#typing", { strings: ["Optimizer", "Exclusive", "AimHead"], speed: 100, loop: true }).go();
+
+        const adminNumber = "62895603290359"; 
+        let countdownInterval;
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(document.getElementById('m-' + id)) document.getElementById('m-' + id).classList.add('active');
+            window.scrollTo(0,0);
+            
+            if (id === 'payment') {
+                startTimer();
+            }
+        }
+
+        function toggleTheme() {
+            const loader = document.getElementById('theme-loader');
+            loader.style.display = 'flex';
+            setTimeout(() => {
+                const b = document.body;
+                const isDark = b.getAttribute('data-theme') === 'dark';
+                b.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                document.getElementById('t-icon').setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+                lucide.createIcons();
+                loader.style.display = 'none';
+                showToast("Tema Berhasil Diubah!");
+            }, 3000);
+        }
+
+        function startTimer(duration = 900) {
+            clearInterval(countdownInterval);
+            const display = document.querySelector('#timer');
+            let endTime = localStorage.getItem('zinzen_timer_end');
+
+            if (!endTime) {
+                endTime = Date.now() + (duration * 1000);
+                localStorage.setItem('zinzen_timer_end', endTime);
+            }
+
+            countdownInterval = setInterval(() => {
+                let now = Date.now();
+                let distance = endTime - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    display.textContent = "00:00";
+                    localStorage.removeItem('zinzen_timer_end');
+                    return;
+                }
+
+                let mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let secs = Math.floor((distance % (1000 * 60)) / 1000);
+                display.textContent = (mins < 10 ? "0"+mins : mins) + ":" + (secs < 10 ? "0"+secs : secs);
+            }, 1000);
+        }
+
+        function openPayment() {
+            const nama = document.getElementById('c-name').value;
+            if(!nama) return showToast("Mohon isi nama!");
+            
+            // Set Timer baru
+            localStorage.removeItem('zinzen_timer_end');
+            
+            const text = `*ORDER MODUL ZINZEN*%0A👤 Nama: ${nama}%0A💻 Device: ${document.getElementById('c-device').value}%0A🤖 Android: ${document.getElementById('c-os').value}%0A💾 RAM: ${document.getElementById('c-ram').value}`;
+            document.getElementById('wa-link').href = `https://wa.me/${adminNumber}?text=${text}`;
+            
+            showPage('payment');
+            startTimer(900);
+        }
+
+        function sendReport() {
+            const n = document.getElementById('r-name').value;
+            const m = document.getElementById('r-msg').value;
+            if(!n || !m) return showToast("Lengkapi data!");
+            const text = `*LAPORAN KENDALA*\n👤 Nama: ${n}\n⚠️ Kendala: ${document.getElementById('r-type').value}\n📝 Detail: ${m}`;
+            window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        window.onload = () => {
+            // Jika ada timer yang sedang berjalan di background, tetap jalankan fungsinya
+            if (localStorage.getItem('zinzen_timer_end')) {
+                startTimer();
+            }
+        };
+    </script>
+</body>
+</html>
