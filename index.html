@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
         /* --- CORE SYSTEM & THEMES --- */
@@ -23,6 +25,28 @@
         [data-theme="dark"] {
             --bg-color: #0f172a; --bg-light: #1e293b; --card-bg: #1e293b;
             --border-color: rgba(255,255,255,0.05); --text-color: #f1f2f6;
+        }
+
+        /* --- NEW: TIKTOK LIVE STYLES --- */
+        .live-banner {
+            position: fixed; top: 108px; left: 0; width: 100%; 
+            background: #fe2c55; color: white; padding: 8px; 
+            display: none; align-items: center; justify-content: center; 
+            gap: 10px; font-size: 0.75rem; font-weight: 800; z-index: 8000;
+            animation: fadeIn 0.5s ease; border-bottom: 2px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .live-dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite; }
+        
+        .live-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            z-index: 20000; display: none; align-items: center; justify-content: center; padding: 2.5rem;
+        }
+        .live-modal-content {
+            background: var(--card-bg); border-radius: 30px; padding: 2rem;
+            text-align: center; max-width: 350px; border: 2px solid #fe2c55;
+            box-shadow: 0 0 30px rgba(254, 44, 85, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -143,6 +167,20 @@
     </style>
 </head>
 <body data-theme="light">
+
+    <div class="live-banner" id="liveBanner" onclick="goToLive()">
+        <div class="live-dot"></div>
+        <span>ZINZEN SEDANG LIVE TIKTOK! KLIK UNTUK NONTON 🚀</span>
+    </div>
+
+    <div class="live-modal" id="liveModal">
+        <div class="live-modal-content">
+            <h2 style="color:#fe2c55; margin-bottom: 10px;">🔴 SEDANG LIVE!</h2>
+            <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 20px;">Bergabunglah di Live TikTok kami untuk melihat demo produk dan tanya jawab langsung!</p>
+            <button class="btn btn-primary" style="background: #fe2c55;" onclick="goToLive()">NONTON LIVE SEKARANG</button>
+            <button class="btn btn-reguler" style="margin-top:10px; border:none;" onclick="closeLiveModal()">NANTI SAJA</button>
+        </div>
+    </div>
 
     <div class="ramadan-top-bar">✨ MARHABAN YA RAMADAN - OPTIMASI TANPA HENTI ✨</div>
     <div class="mosque-header">
@@ -392,6 +430,44 @@
     <script>
         lucide.createIcons();
         new TypeIt("#typing", { strings: ["ZinZen Optimizer", "XYZ AimHead Dev"], speed: 100, loop: true }).go();
+
+        // ==========================================
+        // SINKRONISASI FIREBASE & TIKTOK LIVE REMOTE
+        // ==========================================
+        const firebaseConfig = {
+            // Masukkan URL database kamu disini agar remote bekerja
+            databaseURL: "https://zinzen-default-rtdb.firebaseio.com" 
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // URL TikTok kamu (Ganti username_anda)
+        const tiktokLiveUrl = "https://tiktok.com/@username_anda/live"; 
+
+        // Listener Realtime: Jika Firebase berubah (dari Telegram), web langsung update
+        db.ref("is_live").on("value", (snapshot) => {
+            const isLive = snapshot.val();
+            const banner = document.getElementById('liveBanner');
+            const modal = document.getElementById('liveModal');
+            
+            // Logika Deteksi: munculkan elemen jika status di database 'true'
+            if (isLive === true) {
+                banner.style.display = 'flex';
+                modal.style.display = 'flex';
+            } else {
+                banner.style.display = 'none';
+                modal.style.display = 'none';
+            }
+        });
+
+        function closeLiveModal() {
+            document.getElementById('liveModal').style.display = 'none';
+        }
+
+        function goToLive() {
+            window.open(tiktokLiveUrl, '_blank');
+        }
+        // ==========================================
 
         let cart = [];
         let tempProduct = null;
