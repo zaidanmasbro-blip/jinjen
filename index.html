@@ -2,10 +2,10 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZinZen Official | XYZ AimHead Developer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZinZen Official | Ramadan 2026</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
 
@@ -17,6 +17,7 @@
             --bg-color: #ffffff; --bg-light: #f1f2f6; --card-bg: #ffffff;
             --border-color: rgba(0,0,0,0.06); --text-color: #2d3436; 
             --transition: 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            --ramadan-gold: #f1c40f;
         }
 
         [data-theme="dark"] {
@@ -26,306 +27,563 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); transition: background var(--transition); padding-bottom: 100px; overflow-x: hidden; }
-        .container { max-width: 500px; margin: 0 auto; padding: 0 1.5rem; }
+        .container { max-width: 500px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
-        /* --- LOADING SYSTEM --- */
-        #payment-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; color: white;
-        }
-        .spinner {
-            width: 45px; height: 45px;
-            border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-color);
-            border-radius: 50%; animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* --- RAMADAN TIMER --- */
+        .timer-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--ramadan-gold); border-radius: 15px; padding: 10px; margin-top: 15px; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--ramadan-gold); }
 
-        /* --- SIDEBAR --- */
-        .sidebar { position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100%; background: var(--card-bg); z-index: 4000; transition: var(--transition); padding: 2rem; box-shadow: 10px 0 30px rgba(0,0,0,0.1); }
+        /* --- STICKY TOP ELEMENTS --- */
+        .ramadan-top-bar { position: fixed; top: 0; width: 100%; background: #1e293b; color: var(--ramadan-gold); font-size: 0.65rem; text-align: center; padding: 6px 0; z-index: 9000; font-weight: 700; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .mosque-header { position: fixed; top: 26px; width: 100%; height: 40px; background: var(--bg-color); z-index: 8999; display: flex; justify-content: center; align-items: flex-end; border-bottom: 1px solid var(--border-color); overflow: hidden; transition: background var(--transition); }
+        .mosque-silhouette { width: 100%; max-width: 500px; height: 30px; fill: var(--accent-color); opacity: 0.15; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+
+        .particle { position: fixed; top: -10%; color: var(--ramadan-gold); font-size: 1.2rem; pointer-events: none; z-index: 5; animation: fall linear forwards; opacity: 0.5; }
+
+        /* --- LOADING --- */
+        #payment-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; }
+        .spinner { width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-color); border-radius: 50%; animation: spin 0.8s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- NAVIGATION --- */
+        nav { padding: 1rem 0; position: fixed; width: 100%; top: 66px; background: var(--bg-color); backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4rem; cursor: pointer; }
+
+        /* --- PAGES --- */
+        .page { display: none; padding-top: 150px; min-height: 100vh; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+
+        /* --- SIDEBAR & SOCIAL MENU --- */
+        .sidebar { position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; height: 100%; background: var(--card-bg); z-index: 9500; transition: var(--transition); padding: 2rem 1.5rem; box-shadow: 10px 0 30px rgba(0,0,0,0.1); overflow-y: auto; }
         .sidebar.active { left: 0; }
-        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3999; display: none; backdrop-filter: blur(4px); }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9499; display: none; backdrop-filter: blur(4px); }
         .sidebar-overlay.active { display: block; }
         .sidebar-item { display: flex; align-items: center; gap: 15px; font-weight: 600; padding: 14px; border-radius: 15px; margin-bottom: 8px; cursor: pointer; color: var(--text-color); transition: 0.2s; }
-        .sidebar-item:active { background: var(--bg-light); transform: scale(0.97); }
+        .sidebar-item:active { background: var(--bg-light); transform: scale(0.98); }
+
+        .sidebar-title { font-size: 0.65rem; font-weight: 800; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0 10px 10px; opacity: 0.6; }
+        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .social-card { padding: 12px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none; transition: 0.3s; border: 1px solid var(--border-color); }
+        .sc-wa { background: rgba(37, 211, 102, 0.1); color: #25D366; }
+        .sc-ig { background: rgba(225, 48, 108, 0.1); color: #E1306C; }
+        .sc-tt { background: rgba(0, 0, 0, 0.05); color: var(--text-color); }
+        .sc-yt { background: rgba(255, 0, 0, 0.1); color: #FF0000; }
+
+        /* --- RAMADAN HUB STYLE --- */
+        .ramadan-item { background: linear-gradient(135deg, #f1c40f1a, #f39c121a); color: var(--ramadan-gold) !important; border: 1px solid #f1c40f33; }
+        .sholat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .sholat-card { background: var(--bg-light); padding: 12px; border-radius: 15px; text-align: center; border: 1px solid var(--border-color); }
+        .sholat-card.next { border: 1px solid var(--ramadan-gold); background: #f1c40f10; }
+        .sholat-card span { font-size: 0.65rem; opacity: 0.6; display: block; }
+        .sholat-card b { font-size: 1rem; color: var(--ramadan-gold); }
 
         /* --- UI COMPONENTS --- */
         .card { background: var(--card-bg); border-radius: 28px; border: 1px solid var(--border-color); padding: 1.5rem; margin-top: 1rem; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .badge { position: absolute; top: 15px; right: -30px; background: #ff7675; color: white; padding: 5px 35px; transform: rotate(45deg); font-size: 0.65rem; font-weight: 800; }
-        .section-title { font-size: 0.85rem; font-weight: 800; color: var(--accent-color); text-transform: uppercase; margin-top: 2rem; display: flex; align-items: center; gap: 8px; }
-        .section-title::after { content: ''; height: 2px; flex: 1; background: var(--border-color); }
-
         .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s ease; font-size: 1rem; text-decoration: none; font-family: inherit; }
-        .btn:active { transform: scale(0.96); }
         .btn-primary { background: var(--accent-gradient); color: white; }
         .btn-reguler { background: var(--bg-light); color: var(--text-color); border: 1px solid var(--border-color); }
-        .btn-success { background: #00b894; color: white; }
 
-        /* --- PREMIUM MODAL --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0); backdrop-filter: blur(0px); z-index: 5000; display: none; align-items: flex-end; transition: 0.4s ease; }
-        .modal-overlay.active { display: flex; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); }
-        .modal-content { background: var(--card-bg); width: 100%; border-radius: 32px 32px 0 0; padding: 2.5rem 2rem; transform: translateY(100%); opacity: 0; transition: 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
-        .modal-overlay.active .modal-content { transform: translateY(0); opacity: 1; }
-        .modal-handle { width: 40px; height: 5px; background: var(--border-color); border-radius: 10px; margin: -15px auto 20px auto; }
+        /* --- RECENT SALES NOTIF --- */
+        .recent-sale { position: fixed; bottom: 90px; left: 20px; right: 20px; background: var(--card-bg); padding: 12px 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; z-index: 5000; transform: translateY(200px); transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); border: 1px solid var(--border-color); }
+        .recent-sale.show { transform: translateY(0); }
 
-        /* --- NAVIGATION --- */
-        nav { padding: 1rem 0; position: fixed; width: 100%; top: 0; background: rgba(var(--bg-color), 0.8); backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
-        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4rem; cursor: pointer; }
-
-        /* --- TOAST --- */
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--accent-gradient); color: white; padding: 12px 25px; border-radius: 50px; font-weight: 600; z-index: 10000; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
-        #toast.show { transform: translateX(-50%) translateY(0); }
-
-        /* --- MOBILE NAV --- */
-        .mobile-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-item { text-align: center; color: var(--secondary-color); font-size: 0.7rem; cursor: pointer; opacity: 0.6; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        /* --- MOBILE NAV & CART BADGE --- */
+        .mobile-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .nav-item { text-align: center; color: var(--secondary-color); font-size: 0.7rem; cursor: pointer; opacity: 0.6; display: flex; flex-direction: column; align-items: center; transition: 0.3s; position: relative; }
         .nav-item.active { color: var(--accent-color); opacity: 1; font-weight: 700; }
+        
+        #cart-count-badge {
+            position: absolute; top: -5px; right: 15px; background: #ff4757; color: white;
+            font-size: 0.65rem; font-weight: 800; min-width: 18px; height: 18px;
+            border-radius: 10px; display: none; align-items: center; justify-content: center;
+            border: 2px solid var(--card-bg); z-index: 10;
+        }
+        .cart-bump { animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        /* --- PAGE SYSTEM --- */
-        .page { display: none; padding-top: 90px; min-height: 100vh; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        input { width: 100%; padding: 14px; border-radius: 15px; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-color); margin-bottom: 15px; outline: none; font-family: inherit; }
+        /* --- FAQ --- */
+        .faq-item { border-bottom: 1px solid var(--border-color); padding: 15px 0; cursor: pointer; }
+        .faq-ans { max-height: 0; overflow: hidden; opacity: 0; transition: 0.5s ease; font-size: 0.85rem; color: var(--secondary-color); line-height: 1.5; }
+        .faq-item.active .faq-ans { max-height: 200px; opacity: 1; padding-top: 10px; }
+
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); backdrop-filter: blur(0px); z-index: 9600; display: none; align-items: flex-end; transition: background 0.4s ease, backdrop-filter 0.4s ease; }
+        .modal-content { background: var(--card-bg); width: 100%; border-radius: 32px 32px 0 0; padding: 2.5rem 2rem; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
+        .modal-overlay.active { display: flex; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        /* --- FORMS --- */
+        input, select { width: 100%; padding: 14px; border-radius: 15px; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-color); margin-bottom: 12px; outline: none; font-family: inherit; font-size: 0.9rem; }
+        label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; display: block; color: var(--accent-color); text-transform: uppercase; }
+        
+        .copy-box { display: flex; align-items: center; justify-content: space-between; background: var(--bg-light); padding: 12px; border-radius: 12px; margin-top: 10px; font-weight: 700; font-size: 0.9rem; }
+        
+        /* --- MENU FEATURE GRID --- */
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .feature-item { background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 20px; text-align: center; transition: 0.3s; }
+        .feature-item i { color: var(--accent-color); margin-bottom: 8px; }
+        .feature-item h4 { font-size: 0.75rem; font-weight: 700; }
+        .feature-item p { font-size: 0.6rem; opacity: 0.6; margin-top: 4px; }
+
+        /* --- NEW PAYMENT SUMMARY --- */
+        .payment-summary { background: var(--bg-light); border-radius: 15px; padding: 15px; text-align: left; margin-bottom: 15px; font-size: 0.8rem; border: 1px dashed var(--accent-color); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .summary-row span:first-child { opacity: 0.6; }
+        .summary-row span:last-child { font-weight: 700; color: var(--text-color); }
+
+        /* --- NEW UTILITIES --- */
+        .stock-tag { font-size: 0.65rem; background: #fff3f3; color: #ff4757; padding: 3px 8px; border-radius: 5px; font-weight: 800; display: inline-block; margin-bottom: 5px; }
+        .promo-success { font-size: 0.7rem; color: #00b894; font-weight: 800; margin-top: -5px; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body data-theme="light">
 
-    <div id="payment-loader">
-        <div class="spinner"></div>
-        <p style="margin-top: 20px; font-weight: 700; letter-spacing: 1px;">MEMPROSES DATA...</p>
+    <div class="ramadan-top-bar">✨ MARHABAN YA RAMADAN - OPTIMASI TANPA HENTI ✨</div>
+    <div class="mosque-header">
+        <svg class="mosque-silhouette" viewBox="0 0 500 50" preserveAspectRatio="none">
+            <path d="M0,50 L500,50 L500,40 C480,40 470,20 450,20 C430,20 420,40 400,40 C380,40 370,10 350,10 C330,10 320,40 300,40 C280,40 270,0 250,0 C230,0 220,40 200,40 C180,40 170,10 150,10 C130,10 120,40 100,40 C80,40 70,20 50,20 C30,20 20,40 0,40 Z"></path>
+        </svg>
     </div>
 
-    <div id="toast">Berhasil!</div>
+    <div id="payment-loader">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; font-weight: 700;">MENYIAPKAN PESANAN...</p>
+    </div>
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <div class="logo">ZINZEN.</div>
-            <button onclick="toggleSidebar()" style="background:none; border:none; color:var(--text-color);"><i data-lucide="x"></i></button>
+        <div class="logo" style="margin-bottom: 1rem;">ZINZEN.</div>
+        
+        <div class="sidebar-title">Ramadan Tools 🌙</div>
+        <div class="sidebar-item ramadan-item" onclick="showPage('ramadan-hub'); toggleSidebar()">
+            <i data-lucide="moon-star"></i> Ramadan Hub
         </div>
-        <div class="sidebar-item" onclick="showPage('home'); toggleSidebar()"><i data-lucide="home"></i> Beranda</div>
-        <div class="sidebar-item" onclick="showPage('store'); toggleSidebar()"><i data-lucide="shopping-bag"></i> Toko Produk</div>
-        <div class="sidebar-item" onclick="showPage('links'); toggleSidebar()"><i data-lucide="share-2"></i> Media Sosial</div>
-        <div class="sidebar-item" onclick="toggleTheme()"><i data-lucide="moon"></i> Ganti Tema</div>
-    </div>
 
-    <div class="modal-overlay" id="productModal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-handle"></div>
-            <h3 id="modalProductName">Nama Produk</h3>
-            <p id="modalProductPrice" style="color: var(--accent-color); font-weight: 800; font-size: 1.2rem;">IDR 0</p>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 25px;">
-                <button class="btn btn-primary" onclick="processSelection('buy')"><i data-lucide="zap"></i> Beli Sekarang</button>
-                <button class="btn btn-reguler" onclick="processSelection('cart')"><i data-lucide="shopping-cart"></i> Masukkan Keranjang</button>
-                <button class="btn" style="background:none; color:var(--secondary-color);" onclick="closeModal()">Batal</button>
-            </div>
+        <div class="sidebar-title">Menu Utama</div>
+        <div class="sidebar-item" onclick="showPage('home'); toggleSidebar()"><i data-lucide="home"></i> Beranda</div>
+        <div class="sidebar-item" onclick="showPage('store'); toggleSidebar()"><i data-lucide="shopping-bag"></i> Toko</div>
+        <div class="sidebar-item" onclick="showPage('faq'); toggleSidebar()"><i data-lucide="help-circle"></i> FAQ</div>
+        <div class="sidebar-item" onclick="toggleTheme()"><i data-lucide="moon"></i> Ganti Tema</div>
+
+        <div class="sidebar-title">Sosial Media</div>
+        <div class="social-grid">
+            <a href="https://wa.me/62895603290359" class="social-card sc-wa">
+                <i data-lucide="message-circle"></i> WhatsApp
+            </a>
+            <a href="#" class="social-card sc-ig">
+                <i data-lucide="instagram"></i> Instagram
+            </a>
+            <a href="#" class="social-card sc-tt">
+                <i data-lucide="music"></i> TikTok
+            </a>
+            <a href="#" class="social-card sc-yt">
+                <i data-lucide="youtube"></i> YouTube
+            </a>
         </div>
     </div>
 
     <nav>
         <div class="container nav-wrapper">
-            <button onclick="toggleSidebar()" style="background:none; border:none; color:var(--text-color); cursor:pointer;"><i data-lucide="menu"></i></button>
+            <i data-lucide="menu" onclick="toggleSidebar()" style="cursor:pointer"></i>
             <div class="logo" onclick="showPage('home')">ZINZEN.</div>
-            <button onclick="toggleTheme()" style="background:none; border:none; color:var(--text-color); cursor:pointer;"><i data-lucide="sun" id="t-icon"></i></button>
+            <i data-lucide="sun" onclick="toggleTheme()" id="t-icon" style="cursor:pointer"></i>
         </div>
     </nav>
 
     <div id="page-home" class="page active container">
-        <h1 style="text-align:center; min-height: 80px; margin-top: 2rem;"><span id="typing"></span></h1>
-        <div class="card" style="background: var(--accent-gradient); color: white; text-align: center; border:none; padding: 2.5rem 1.5rem;">
-            <h2>XYZ AimHead V.1</h2>
-            <p style="margin: 10px 0; opacity: 0.8; font-size: 0.85rem;">Optimasi device Anda ke level maksimal.</p>
-            <button class="btn" style="background: white; color: var(--accent-color); margin-top: 15px;" onclick="showPage('store')">Lihat Produk</button>
+        <h1 style="text-align:center; min-height: 80px;"><span id="typing"></span></h1>
+        
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
+            <div style="background: rgba(0, 184, 148, 0.1); color: #00b894; padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; gap: 5px;">
+                <span style="width: 8px; height: 8px; background: #00b894; border-radius: 50%; animation: pulse 1.5s infinite;"></span> SERVER ONLINE
+            </div>
+        </div>
+
+        <div class="card" style="background: var(--accent-gradient); color: white; border:none; text-align: center;">
+            <h3>Promo Berkah Ramadan ✨</h3>
+            <p style="font-size: 0.8rem; margin: 10px 0;">Pakai kode: <b>BERKAH</b> (Potongan IDR 5.000)</p>
+        </div>
+
+        <div class="timer-box" id="ramadan-timer">
+            Memuat Waktu Sahur...
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+            <div class="card" style="margin-top:0; padding: 1rem; text-align:center;">
+                <h2 style="color: var(--accent-color);">1.5K+</h2>
+                <p style="font-size: 0.65rem; opacity: 0.6; font-weight: 700;">USER AKTIF</p>
+            </div>
+            <div class="card" style="margin-top:0; padding: 1rem; text-align:center;">
+                <h2 style="color: #00b894;">100%</h2>
+                <p style="font-size: 0.65rem; opacity: 0.6; font-weight: 700;">ANTI BAN</p>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i data-lucide="zap"></i>
+                <h4>Instant Delivery</h4>
+                <p>Proses cepat & otomatis.</p>
+            </div>
+            <div class="feature-item">
+                <i data-lucide="shield-check"></i>
+                <h4>Secure Payment</h4>
+                <p>Transaksi 100% aman.</p>
+            </div>
+            <div class="feature-item">
+                <i data-lucide="headset"></i>
+                <h4>24/7 Support</h4>
+                <p>Bantuan kapan saja.</p>
+            </div>
+            <div class="feature-item">
+                <i data-lucide="refresh-cw"></i>
+                <h4>Free Update</h4>
+                <p>Update script gratis.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-ramadan-hub" class="page container">
+        <h2 style="text-align:center">Ramadan Hub 🌙</h2>
+        <div class="card" style="text-align: center; background: var(--ramadan-gold); color: #000; border: none;">
+            <p style="font-size: 0.7rem; font-weight: 800; opacity: 0.7;">WAKTU SEKARANG</p>
+            <h1 id="clock-digital">00:00:00</h1>
+        </div>
+        <div class="sholat-grid" id="jadwal-sholat-list"></div>
+        <div class="card">
+            <h4 style="margin-bottom: 10px;"><i data-lucide="book-open" size="16"></i> Niat Puasa</h4>
+            <p style="font-size: 0.85rem; line-height: 1.6; font-style: italic;">"Nawaitu shauma ghadin 'an ada'i fardhi syahri Ramadhana hadzihis sanati lillahi ta'ala."</p>
+            <hr style="margin: 10px 0; opacity: 0.1;">
+            <h4 style="margin-bottom: 10px;"><i data-lucide="utensils" size="16"></i> Doa Berbuka</h4>
+            <p style="font-size: 0.85rem; line-height: 1.6; font-style: italic;">"Allahumma laka shumtu wa bika amantu wa 'ala rizqika afthartu birahmatika ya arhamar rahimin."</p>
         </div>
     </div>
 
     <div id="page-store" class="page container">
-        <h2 style="text-align:center">Product Store</h2>
-        <div class="section-title">Premium</div>
+        <h2 style="text-align:center">Product Catalog</h2>
         <div class="card">
             <div class="badge">HOT</div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div><h3>AimHead VIP</h3><p style="font-size:0.7rem; opacity:0.6;">Permanent & Anti Reset.</p></div>
-                <div style="color:var(--accent-color); font-weight:800;">IDR 25K</div>
+            <div class="stock-tag">Sisa Stok: 3 Lisensi</div>
+            <h3>AimHead VIP Permanent</h3>
+            <p style="font-size:0.75rem; opacity:0.6; margin: 5px 0;">Optimasi sensitivitas & auto headshot.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                <b style="color:var(--accent-color)">IDR 25.000</b>
+                <button class="btn btn-primary" style="width:auto; padding: 8px 20px;" onclick="openProductModal('AimHead VIP', 25000, 'Fitur VIP: Anti-Shake, Lock Head 90%, Safe for Main ID.')">Beli</button>
             </div>
-            <button class="btn btn-primary" style="margin-top:1rem;" onclick="openProductModal('AimHead VIP', 25000)">Pilih Produk</button>
         </div>
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div><h3>Ultra Smooth FPS</h3><p style="font-size:0.7rem; opacity:0.6;">Unlock 120 FPS Stable.</p></div>
-                <div style="color:var(--accent-color); font-weight:800;">IDR 35K</div>
+            <div class="stock-tag">Sisa Stok: 12 Lisensi</div>
+            <h3>Ultra Smooth 120 FPS</h3>
+            <p style="font-size:0.75rem; opacity:0.6; margin: 5px 0;">Unlock grafik ultra & FPS stabil.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                <b style="color:var(--accent-color)">IDR 35.000</b>
+                <button class="btn btn-primary" style="width:auto; padding: 8px 20px;" onclick="openProductModal('Ultra Smooth FPS', 35000, 'Fitur FPS: Unlock 90/120 FPS, No Overheat, Smooth Gameplay.')">Beli</button>
             </div>
-            <button class="btn btn-primary" style="margin-top:1rem;" onclick="openProductModal('Ultra Smooth FPS', 35000)">Pilih Produk</button>
-        </div>
-    </div>
-
-    <div id="page-links" class="page container">
-        <h2 style="text-align:center">Social Media</h2>
-        <div class="card">
-            <a href="https://wa.me/62895603290359" style="display:flex; align-items:center; gap:15px; text-decoration:none; color:inherit; margin-bottom:15px;">
-                <div style="background:#25D366; color:white; padding:10px; border-radius:12px;"><i data-lucide="message-circle"></i></div>
-                <div><b>WhatsApp</b><br><small style="opacity:0.6;">Hubungi Admin</small></div>
-            </a>
-            <a href="https://tiktok.com/@jinjennn12" style="display:flex; align-items:center; gap:15px; text-decoration:none; color:inherit;">
-                <div style="background:black; color:white; padding:10px; border-radius:12px;"><i data-lucide="video"></i></div>
-                <div><b>TikTok</b><br><small style="opacity:0.6;">Showcase Produk</small></div>
-            </a>
         </div>
     </div>
 
     <div id="page-cart" class="page container">
         <h2 style="text-align:center">Keranjang</h2>
-        <div id="cart-list" class="card"></div>
+        <div id="cart-list"></div>
         <div class="card">
             <div style="display: flex; justify-content: space-between; font-weight: 800;">
                 <span>Total:</span><span id="cart-total" style="color: var(--accent-color);">IDR 0</span>
             </div>
             <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showPage('checkout')">Lanjut Checkout</button>
+            <button class="btn btn-reguler" style="margin-top: 10px;" onclick="showPage('store')">Kembali Belanja</button>
+            <button class="btn btn-reguler" style="margin-top: 10px; border:none; color:#ff4757;" onclick="clearCart()">Kosongkan</button>
         </div>
     </div>
 
     <div id="page-checkout" class="page container">
-        <h2 style="text-align:center">Data Pembeli</h2>
+        <h2 style="text-align:center">Konfirmasi Data</h2>
         <div class="card">
+            <label>Data Identitas</label>
             <input type="text" id="c-name" placeholder="Nama Lengkap">
-            <input type="text" id="c-device" placeholder="Tipe HP / Device">
             <input type="number" id="c-wa" placeholder="Nomor WhatsApp">
-            <button class="btn btn-primary" onclick="validateCheckout()">Lanjut ke Pembayaran</button>
+            
+            <label>Detail Akun Game</label>
+            <select id="c-game-type">
+                <option value="" disabled selected>Pilih Game</option>
+                <option value="Free Fire">Free Fire</option>
+                <option value="Mobile Legends">Mobile Legends</option>
+                <option value="PUBG Mobile">PUBG Mobile</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <input type="text" id="c-game-id" placeholder="ID Akun / Username Game">
+
+            <label>Kode Promo (Opsional)</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="c-promo" placeholder="Kode Promo" style="margin-bottom:0;">
+                <button class="btn btn-primary" style="width: 80px; padding: 0;" onclick="applyPromo()">Cek</button>
+            </div>
+            <p id="promo-success-msg" class="promo-success">Kupon BERKAH Berhasil Dipasang! (-5rb)</p>
+
+            <label style="margin-top:15px">Metode Pembayaran</label>
+            <select id="c-method">
+                <option value="QRIS All Payment">QRIS All Payment</option>
+                <option value="Dana">Dana (0895xxxx)</option>
+                <option value="Gopay">Gopay (0895xxxx)</option>
+            </select>
+            <button class="btn btn-primary" onclick="validateCheckout()">Proses Pembayaran</button>
         </div>
     </div>
 
     <div id="page-payment" class="page container" style="text-align: center;">
-        <h2 style="margin-bottom:10px;">Pembayaran</h2>
+        <h2>Pembayaran</h2>
         <div class="card">
-            <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.7;">Scan atau download QRIS berikut:</p>
+            <div class="payment-summary" id="payment-summary-box"></div>
             
-            <div style="background: white; padding: 10px; border-radius: 20px; display: inline-block; border: 3px solid var(--accent-color); margin-bottom: 15px;">
-                <img src="qris.jpg" alt="QRIS" style="width:100%; max-width:250px; border-radius: 12px; display: block;">
+            <p style="font-size: 0.65rem; color: #00b894; font-weight: 800; margin-bottom: 10px;">⚡ ESTIMASI PROSES: 5-10 MENIT</p>
+
+            <img src="qris.jpg" alt="QRIS" style="width:100%; max-width:250px; border-radius: 12px; border: 2px solid var(--accent-color);">
+            
+            <div class="copy-box">
+                <span>DANA: 0895603290359</span>
+                <i data-lucide="copy" size="18" onclick="copyNumber('0895603290359')" style="cursor:pointer; color:var(--accent-color)"></i>
             </div>
 
-            <a href="qris.jpg" download="QRIS_ZinZen.jpg" class="btn btn-reguler" style="margin-bottom: 15px;">
-                <i data-lucide="download"></i> Download QRIS
-            </a>
-            
             <p style="font-weight: 800; font-size: 1.3rem; color: #e74c3c; margin-top: 15px;">TOTAL: <span id="final-price"></span></p>
-            <button class="btn btn-success" style="margin-top: 20px;" onclick="sendWhatsApp()">
-                <i data-lucide="message-circle"></i> Kirim Bukti Transfer
-            </button>
+            <button class="btn btn-primary" style="margin-top: 10px; background: #00b894;" onclick="sendWhatsApp()">Kirim Bukti Ke WhatsApp</button>
+        </div>
+    </div>
+
+    <div id="page-faq" class="page container">
+        <h2 style="text-align:center">Bantuan</h2>
+        <div class="card">
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div style="font-weight:600;">Apakah Aman?</div>
+                <div class="faq-ans">100% Aman. Kami menggunakan optimasi sistem registry, bukan modifikasi file ilegal.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div style="font-weight:600;">Berapa Lama Aktivasi?</div>
+                <div class="faq-ans">Proses biasanya memakan waktu 5-15 menit setelah bukti transfer dikirim.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="productModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 id="modalProductName">Nama Produk</h3>
+            <p id="modalProductDesc" style="font-size: 0.8rem; opacity: 0.7; margin: 10px 0; line-height: 1.4;"></p>
+            <p id="modalProductPrice" style="color:var(--accent-color); font-weight:800; margin: 10px 0; font-size: 1.2rem;"></p>
+            <button class="btn btn-primary" style="margin-bottom:10px" onclick="processBuy('direct')">Beli Sekarang</button>
+            <button class="btn btn-reguler" onclick="processBuy('cart')">Tambah Keranjang</button>
         </div>
     </div>
 
     <div class="mobile-nav">
         <div class="nav-item active" id="m-home" onclick="showPage('home')"><i data-lucide="home"></i><div>Home</div></div>
         <div class="nav-item" id="m-store" onclick="showPage('store')"><i data-lucide="shopping-bag"></i><div>Store</div></div>
-        <div class="nav-item" id="m-links" onclick="showPage('links')"><i data-lucide="share-2"></i><div>Social</div></div>
-        <div class="nav-item" id="m-cart" onclick="showPage('cart')"><i data-lucide="shopping-cart"></i><div>Cart</div></div>
+        <div class="nav-item" id="m-cart" onclick="showPage('cart')">
+            <div id="cart-count-badge">0</div>
+            <i data-lucide="shopping-cart"></i>
+            <div>Cart</div>
+        </div>
+        <div class="nav-item" id="m-faq" onclick="showPage('faq')"><i data-lucide="help-circle"></i><div>Help</div></div>
     </div>
 
     <script>
         lucide.createIcons();
-        new TypeIt("#typing", { strings: ["ZinZen Optimizer", "AimHead Developer"], speed: 100, loop: true }).go();
+        new TypeIt("#typing", { strings: ["ZinZen Optimizer", "XYZ AimHead Dev"], speed: 100, loop: true }).go();
 
         let cart = [];
         let tempProduct = null;
-        const adminNumber = "62895603290359";
+        let discount = 0;
+        let userData = { name: "", wa: "", game: "", id: "", method: "" };
+
+        // RAMADAN HUB LOGIC
+        const jadwalSholat = [
+            {nama: 'Imsak', jam: '04:32'}, {nama: 'Subuh', jam: '04:42'},
+            {nama: 'Dzuhur', jam: '12:05'}, {nama: 'Ashar', jam: '15:14'},
+            {nama: 'Maghrib', jam: '18:10'}, {nama: 'Isya', jam: '19:19'}
+        ];
+
+        function renderJadwal() {
+            const container = document.getElementById('jadwal-sholat-list');
+            if(!container) return;
+            const now = new Date();
+            const timeNow = now.getHours() * 60 + now.getMinutes();
+            container.innerHTML = '';
+            jadwalSholat.forEach(s => {
+                const [h, m] = s.jam.split(':').map(Number);
+                const sTime = h * 60 + m;
+                const isNext = sTime > timeNow;
+                container.innerHTML += `<div class="sholat-card ${isNext ? 'next' : ''}"><span>${s.nama}</span><b>${s.jam} WIB</b></div>`;
+            });
+        }
+
+        function updateClock() {
+            const el = document.getElementById('clock-digital');
+            if(el) el.innerText = new Date().toLocaleTimeString('id-ID', { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+
+        function updateRamadanTimer() {
+            const now = new Date();
+            const sahur = new Date(); sahur.setHours(4, 32, 0); 
+            const buka = new Date(); buka.setHours(18, 10, 0); 
+            let target = now < sahur ? sahur : (now < buka ? buka : sahur);
+            if (now > buka) target.setDate(target.getDate() + 1);
+            const diff = target - now;
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const label = target === buka ? "Buka Puasa" : "Imsak";
+            const timerEl = document.getElementById('ramadan-timer');
+            if(timerEl) timerEl.innerText = `⏳ ${h}j ${m}m Menuju ${label}`;
+            renderJadwal();
+        }
+        setInterval(updateRamadanTimer, 60000);
+        updateRamadanTimer();
+
+        // STORE & CART LOGIC
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(document.getElementById('m-'+id)) document.getElementById('m-'+id).classList.add('active');
+            if(id === 'cart') renderCart();
+            if(id === 'ramadan-hub') renderJadwal();
+            window.scrollTo(0,0);
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-count-badge');
+            if (cart.length > 0) {
+                badge.innerText = cart.length;
+                badge.style.display = 'flex';
+                badge.classList.remove('cart-bump');
+                void badge.offsetWidth; 
+                badge.classList.add('cart-bump');
+            } else { badge.style.display = 'none'; }
+        }
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
-        function openProductModal(name, price) {
-            tempProduct = { name, price };
-            document.getElementById('modalProductName').textContent = name;
-            document.getElementById('modalProductPrice').textContent = "IDR " + price.toLocaleString();
-            const m = document.getElementById('productModal');
-            m.style.display = 'flex';
-            setTimeout(() => m.classList.add('active'), 10);
-        }
-
-        function closeModal() {
-            const m = document.getElementById('productModal');
-            m.classList.remove('active');
-            setTimeout(() => { m.style.display = 'none'; tempProduct = null; }, 400);
-        }
-
-        function processSelection(type) {
-            if (type === 'buy') { cart = [tempProduct]; showPage('checkout'); } 
-            else { cart.push(tempProduct); showToast("Masuk Keranjang!"); }
-            updateCartBadge();
-            closeModal();
-        }
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(document.getElementById('m-' + id)) document.getElementById('m-' + id).classList.add('active');
-            if(id === 'cart') renderCart();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        function updateCartBadge() {
-            let total = cart.reduce((a, b) => a + b.price, 0);
-            document.getElementById('cart-total').textContent = "IDR " + total.toLocaleString();
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cart-list');
-            list.innerHTML = cart.length === 0 ? '<p style="text-align:center; opacity:0.5; padding:20px;">Keranjang Kosong</p>' : '';
-            let total = 0;
-            cart.forEach((item, index) => {
-                total += item.price;
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border-color);">
-                    <span>${item.name}</span>
-                    <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ff7675; cursor:pointer;"><i data-lucide="trash-2" style="width:18px;"></i></button>
-                </div>`;
-            });
-            document.getElementById('cart-total').textContent = "IDR " + total.toLocaleString();
-            document.getElementById('final-price').textContent = "IDR " + total.toLocaleString();
-            lucide.createIcons();
-        }
-
-        function removeFromCart(i) { cart.splice(i, 1); renderCart(); updateCartBadge(); }
-
-        function validateCheckout() {
-            const n = document.getElementById('c-name').value;
-            const w = document.getElementById('c-wa').value;
-            if(!n || !w) return showToast("Lengkapi Nama & WA!");
-
-            const loader = document.getElementById('payment-loader');
-            loader.style.display = 'flex';
-            
-            setTimeout(() => {
-                loader.style.display = 'none';
-                showPage('payment');
-            }, 2000);
-        }
-
-        function sendWhatsApp() {
-            const n = document.getElementById('c-name').value;
-            const d = document.getElementById('c-device').value || "-";
-            let items = cart.map(i => `- ${i.name}`).join('%0A');
-            let total = cart.reduce((a, b) => a + b.price, 0);
-            const msg = `*ORDER ZINZEN*%0A👤 Nama: ${n}%0A📱 Device: ${d}%0A%0A*PRODUK:*%0A${items}%0A%0A💰 TOTAL: IDR ${total.toLocaleString()}%0A%0A_Saya sudah transfer, mohon diproses._`;
-            window.open(`https://wa.me/${adminNumber}?text=${msg}`, '_blank');
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg; t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
-        }
-
         function toggleTheme() {
             const b = document.body;
             const isDark = b.getAttribute('data-theme') === 'dark';
             b.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            document.getElementById('t-icon').setAttribute('data-lucide', isDark ? 'moon' : 'sun');
             lucide.createIcons();
         }
+
+        function openProductModal(name, price, desc) {
+            tempProduct = { name, price };
+            document.getElementById('modalProductName').innerText = name;
+            document.getElementById('modalProductDesc').innerText = desc;
+            document.getElementById('modalProductPrice').innerText = "IDR " + price.toLocaleString();
+            const modal = document.getElementById('productModal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+        }
+
+        function closeModal() { 
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 400);
+        }
+
+        function processBuy(type) {
+            if(type === 'direct') { cart = [tempProduct]; showPage('checkout'); }
+            else { cart.push(tempProduct); updateCartBadge(); }
+            closeModal();
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cart-list');
+            list.innerHTML = cart.length === 0 ? "<p style='text-align:center; padding:20px; opacity:0.5;'>Keranjang Kosong</p>" : "";
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                list.innerHTML += `<div class="card" style="display:flex; justify-content:space-between; align-items:center;"><div><b>${item.name}</b><br><span style="font-size:0.8rem; color:var(--accent-color)">IDR ${item.price.toLocaleString()}</span></div><i data-lucide="trash-2" size="18" onclick="removeFromCart(${index})" style="color:#ff4757; cursor:pointer;"></i></div>`;
+            });
+            document.getElementById('cart-total').innerText = "IDR " + total.toLocaleString();
+            lucide.createIcons();
+        }
+
+        function removeFromCart(index) { cart.splice(index, 1); renderCart(); updateCartBadge(); }
+        function clearCart() { cart = []; renderCart(); updateCartBadge(); }
+
+        // PROMO LOGIC
+        function applyPromo() {
+            const code = document.getElementById('c-promo').value.toUpperCase();
+            if(code === 'BERKAH') {
+                discount = 5000;
+                document.getElementById('promo-success-msg').style.display = 'block';
+                alert("Kode Promo BERKAH berhasil! Diskon IDR 5.000 terpasang.");
+            } else {
+                discount = 0;
+                document.getElementById('promo-success-msg').style.display = 'none';
+                alert("Kode promo tidak valid.");
+            }
+        }
+
+        function validateCheckout() {
+            userData = {
+                name: document.getElementById('c-name').value,
+                wa: document.getElementById('c-wa').value,
+                game: document.getElementById('c-game-type').value,
+                id: document.getElementById('c-game-id').value,
+                method: document.getElementById('c-method').value
+            };
+
+            if(!userData.name || !userData.wa || !userData.game || !userData.id) return alert("Lengkapi data Anda!");
+
+            let total = cart.reduce((a, b) => a + b.price, 0);
+            let finalPrice = total - discount;
+            if(finalPrice < 0) finalPrice = 0;
+
+            const sumBox = document.getElementById('payment-summary-box');
+            sumBox.innerHTML = `
+                <div class="summary-row"><span>Pembeli</span><span>${userData.name}</span></div>
+                <div class="summary-row"><span>Game</span><span>${userData.game}</span></div>
+                <div class="summary-row"><span>ID Akun</span><span>${userData.id}</span></div>
+                <div class="summary-row"><span>Total Item</span><span>${cart.length}</span></div>
+                ${discount > 0 ? `<div class="summary-row"><span style="color:#00b894">Diskon Kupon</span><span style="color:#00b894">-IDR 5.000</span></div>` : ''}
+                <div class="summary-row"><span>Metode</span><span>${userData.method}</span></div>
+            `;
+
+            document.getElementById('final-price').innerText = "IDR " + finalPrice.toLocaleString();
+            document.getElementById('payment-loader').style.display = 'flex';
+            setTimeout(() => { document.getElementById('payment-loader').style.display = 'none'; showPage('payment'); }, 1500);
+        }
+
+        function sendWhatsApp() {
+            const totalText = document.getElementById('final-price').innerText;
+            const itemNames = cart.map(i => i.name).join(", ");
+            const message = `*KONFIRMASI PEMBAYARAN - ZINZEN*\n----------------------------------------\n👤 *Nama:* ${userData.name}\n🎮 *Game:* ${userData.game}\n🆔 *ID Akun:* ${userData.id}\n📦 *Produk:* ${itemNames}\n💳 *Metode:* ${userData.method}\n💰 *Total:* ${totalText}\n----------------------------------------\nSaya sudah melakukan transfer. Mohon diproses Admin.`;
+            window.open(`https://wa.me/62895603290359?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function copyNumber(num) { navigator.clipboard.writeText(num); alert("Tersalin!"); }
+        function toggleFaq(el) { el.classList.toggle('active'); }
+
+        // Particles & Fake Notif
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.className = 'particle'; p.textContent = '🌙';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 5000);
+        }, 2000);
+
+        setInterval(() => {
+            let box = document.querySelector('.recent-sale') || document.createElement('div');
+            box.className = 'recent-sale'; document.body.appendChild(box);
+            box.innerHTML = `<div style="font-size: 0.75rem;"><b>Seorang User</b> baru saja membeli <br><span style="color: var(--accent-color); font-weight:700;">AimHead VIP Ramadan</span></div>`;
+            box.classList.add('show');
+            setTimeout(() => box.classList.remove('show'), 4000);
+        }, 25000);
     </script>
 </body>
 </html>
