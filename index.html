@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         /* --- CORE SYSTEM & THEMES --- */
@@ -164,6 +165,11 @@
         /* --- NEW UTILITIES --- */
         .stock-tag { font-size: 0.65rem; background: #fff3f3; color: #ff4757; padding: 3px 8px; border-radius: 5px; font-weight: 800; display: inline-block; margin-bottom: 5px; }
         .promo-success { font-size: 0.7rem; color: #00b894; font-weight: 800; margin-top: -5px; margin-bottom: 10px; display: none; }
+
+        /* --- NEW: TOP BUYER LIST (LEADERBOARD) --- */
+        .top-list { background: var(--bg-light); border-radius: 15px; padding: 15px; margin-top: 10px; border: 1px solid var(--border-color); }
+        .top-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.8rem; }
+        .top-item span { font-weight: 700; color: var(--accent-color); }
     </style>
 </head>
 <body data-theme="light">
@@ -250,6 +256,15 @@
 
         <div class="timer-box" id="ramadan-timer">
             Memuat Waktu Sahur...
+        </div>
+
+        <div class="card">
+            <h4 style="margin-bottom:10px;"><i data-lucide="trophy" size="16"></i> Top Pembeli Hari Ini</h4>
+            <div class="top-list">
+                <div class="top-item"><div>1. Syahrul**</div> <span>12 Order</span></div>
+                <div class="top-item"><div>2. AdminGans**</div> <span>8 Order</span></div>
+                <div class="top-item"><div>3. PlayerFF**</div> <span>5 Order</span></div>
+            </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
@@ -432,41 +447,43 @@
         new TypeIt("#typing", { strings: ["ZinZen Optimizer", "XYZ AimHead Dev"], speed: 100, loop: true }).go();
 
         // ==========================================
-        // SINKRONISASI FIREBASE & TIKTOK LIVE REMOTE
+        // KONFIGURASI REMOTE (SILAKAN ISI DISINI)
         // ==========================================
-        const firebaseConfig = {
-            // Masukkan URL database kamu disini agar remote bekerja
-            databaseURL: "https://zinzen-default-rtdb.firebaseio.com" 
+        const CONFIG = {
+            firebaseURL: "https://zinzen-default-rtdb.firebaseio.com", // Ganti dengan URL Firebase Anda
+            botToken: "8717894906:AAGuUJ1Bs99xQmjyDBnuvf_RrzySwBGAuTk", // Token dari BotFather
+            chatId: "7710470365", // ID Chat dari @userinfobot
+            tiktokLiveUrl: "https://tiktok.com/jinjennn12/live"
         };
-        firebase.initializeApp(firebaseConfig);
+
+        // Inisialisasi Firebase
+        firebase.initializeApp({ databaseURL: CONFIG.firebaseURL });
         const db = firebase.database();
 
-        // URL TikTok kamu (Ganti username_anda)
-        const tiktokLiveUrl = "https://tiktok.com/@username_anda/live"; 
-
-        // Listener Realtime: Jika Firebase berubah (dari Telegram), web langsung update
+        // Listener Realtime Firebase
+        let lastLiveStatus = false;
         db.ref("is_live").on("value", (snapshot) => {
             const isLive = snapshot.val();
             const banner = document.getElementById('liveBanner');
             const modal = document.getElementById('liveModal');
             
-            // Logika Deteksi: munculkan elemen jika status di database 'true'
             if (isLive === true) {
                 banner.style.display = 'flex';
                 modal.style.display = 'flex';
+                // Jika baru berubah jadi TRUE, ledakkan kembang api
+                if(!lastLiveStatus) {
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 30000 });
+                }
             } else {
                 banner.style.display = 'none';
                 modal.style.display = 'none';
             }
+            lastLiveStatus = isLive;
         });
 
-        function closeLiveModal() {
-            document.getElementById('liveModal').style.display = 'none';
-        }
+        function closeLiveModal() { document.getElementById('liveModal').style.display = 'none'; }
+        function goToLive() { window.open(CONFIG.tiktokLiveUrl, '_blank'); }
 
-        function goToLive() {
-            window.open(tiktokLiveUrl, '_blank');
-        }
         // ==========================================
 
         let cart = [];
