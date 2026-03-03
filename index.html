@@ -21,6 +21,7 @@
             --border-color: rgba(0,0,0,0.06); --text-color: #2d3436; 
             --transition: 0.4s cubic-bezier(0.32, 0.72, 0, 1);
             --ramadan-gold: #f1c40f;
+            --vip-gradient: linear-gradient(135deg, #f1c40f, #f39c12);
         }
 
         [data-theme="dark"] {
@@ -28,7 +29,20 @@
             --border-color: rgba(255,255,255,0.05); --text-color: #f1f2f6;
         }
 
-        /* --- NEW: TIKTOK LIVE STYLES --- */
+        /* --- USER DASHBOARD IN SIDEBAR --- */
+        .user-profile-mini {
+            background: var(--accent-gradient);
+            padding: 15px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-avatar { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* --- TIKTOK LIVE STYLES --- */
         .live-banner {
             position: fixed; top: 108px; left: 0; width: 100%; 
             background: #fe2c55; color: white; padding: 8px; 
@@ -50,41 +64,73 @@
             box-shadow: 0 0 30px rgba(254, 44, 85, 0.3);
         }
 
+        /* --- NEWS POPUP STYLE (LANDING PAGE) --- */
+        .news-popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            z-index: 30000; display: none; align-items: center; justify-content: center; padding: 2rem;
+        }
+        .news-popup-content {
+            background: var(--card-bg); border-radius: 25px; overflow: hidden;
+            max-width: 400px; width: 100%; animation: fadeIn 0.5s ease;
+            position: relative; border: 1px solid var(--border-color);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); transition: background var(--transition); padding-bottom: 100px; overflow-x: hidden; }
         .container { max-width: 500px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
-        /* --- RAMADAN TIMER --- */
         .timer-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--ramadan-gold); border-radius: 15px; padding: 10px; margin-top: 15px; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--ramadan-gold); }
 
-        /* --- STICKY TOP ELEMENTS --- */
+        /* --- RAMADAN HUB STYLES --- */
+        .checklist-item { display: flex; align-items: center; gap: 12px; background: var(--bg-light); padding: 12px; border-radius: 15px; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; border: 1px solid var(--border-color); }
+        .checklist-item.done { opacity: 0.6; background: rgba(0, 184, 148, 0.05); border-color: #00b894; }
+        .checklist-item input { width: 18px; height: 18px; margin-bottom: 0; pointer-events: none; }
+        .zakat-box { background: var(--bg-light); border-radius: 20px; padding: 20px; border: 1px solid var(--border-color); margin-top: 10px; }
+        .zakat-res { background: var(--accent-gradient); color: white; padding: 15px; border-radius: 15px; text-align: center; margin-top: 15px; }
+
+        /* --- AI OPTIMIZER STYLES --- */
+        .ai-res-box { display: none; margin-top: 20px; animation: fadeIn 0.5s ease; border: 1px solid var(--accent-color); border-radius: 20px; padding: 15px; background: var(--bg-light); }
+        .sensi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .sensi-item { background: var(--card-bg); padding: 10px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); }
+        .sensi-item span { display: block; font-size: 0.65rem; opacity: 0.6; }
+        .sensi-item b { font-size: 1.1rem; color: var(--accent-color); }
+
+        /* --- RAMADAN PROGRESS --- */
+        .progress-container { margin: 15px 0; background: var(--bg-light); border-radius: 10px; height: 8px; overflow: hidden; position: relative; }
+        .progress-bar { height: 100%; background: var(--ramadan-gold); width: 45%; transition: 1s ease-in-out; }
+        .progress-text { font-size: 0.65rem; font-weight: 800; color: var(--secondary-color); display: flex; justify-content: space-between; margin-top: 5px; }
+
         .ramadan-top-bar { position: fixed; top: 0; width: 100%; background: #1e293b; color: var(--ramadan-gold); font-size: 0.65rem; text-align: center; padding: 6px 0; z-index: 9000; font-weight: 700; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .mosque-header { position: fixed; top: 26px; width: 100%; height: 40px; background: var(--bg-color); z-index: 8999; display: flex; justify-content: center; align-items: flex-end; border-bottom: 1px solid var(--border-color); overflow: hidden; transition: background var(--transition); }
-        .mosque-silhouette { width: 100%; max-width: 500px; height: 30px; fill: var(--accent-color); opacity: 0.15; }
+        .mosque-silhouette { width: 100%; max-width: 500px; height: 30px; fill: var(--accent-color); opacity: 0.15; transition: transform 0.1s linear; }
 
-        /* --- ANIMATIONS --- */
+        /* --- CATEGORY CHIPS --- */
+        .category-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .chip { padding: 8px 18px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 50px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+        .chip.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; transform: translateX(-50%) translateY(0); } to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.4); } }
 
         .particle { position: fixed; top: -10%; color: var(--ramadan-gold); font-size: 1.2rem; pointer-events: none; z-index: 5; animation: fall linear forwards; opacity: 0.5; }
 
-        /* --- LOADING --- */
         #payment-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; }
         .spinner { width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-color); border-radius: 50%; animation: spin 0.8s infinite linear; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- NAVIGATION --- */
         nav { padding: 1rem 0; position: fixed; width: 100%; top: 66px; background: var(--bg-color); backdrop-filter: blur(15px); z-index: 1000; border-bottom: 1px solid var(--border-color); }
         .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4rem; cursor: pointer; }
+        .logo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
 
-        /* --- PAGES --- */
         .page { display: none; padding-top: 150px; min-height: 100vh; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
 
-        /* --- SIDEBAR & SOCIAL MENU --- */
         .sidebar { position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; height: 100%; background: var(--card-bg); z-index: 9500; transition: var(--transition); padding: 2rem 1.5rem; box-shadow: 10px 0 30px rgba(0,0,0,0.1); overflow-y: auto; }
         .sidebar.active { left: 0; }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9499; display: none; backdrop-filter: blur(4px); }
@@ -100,26 +146,23 @@
         .sc-tt { background: rgba(0, 0, 0, 0.05); color: var(--text-color); }
         .sc-yt { background: rgba(255, 0, 0, 0.1); color: #FF0000; }
 
-        /* --- RAMADAN HUB STYLE --- */
         .ramadan-item { background: linear-gradient(135deg, #f1c40f1a, #f39c121a); color: var(--ramadan-gold) !important; border: 1px solid #f1c40f33; }
+
         .sholat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
         .sholat-card { background: var(--bg-light); padding: 12px; border-radius: 15px; text-align: center; border: 1px solid var(--border-color); }
         .sholat-card.next { border: 1px solid var(--ramadan-gold); background: #f1c40f10; }
         .sholat-card span { font-size: 0.65rem; opacity: 0.6; display: block; }
         .sholat-card b { font-size: 1rem; color: var(--ramadan-gold); }
 
-        /* --- UI COMPONENTS --- */
         .card { background: var(--card-bg); border-radius: 28px; border: 1px solid var(--border-color); padding: 1.5rem; margin-top: 1rem; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .badge { position: absolute; top: 15px; right: -30px; background: #ff7675; color: white; padding: 5px 35px; transform: rotate(45deg); font-size: 0.65rem; font-weight: 800; }
         .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s ease; font-size: 1rem; text-decoration: none; font-family: inherit; }
         .btn-primary { background: var(--accent-gradient); color: white; }
         .btn-reguler { background: var(--bg-light); color: var(--text-color); border: 1px solid var(--border-color); }
 
-        /* --- RECENT SALES NOTIF --- */
         .recent-sale { position: fixed; bottom: 90px; left: 20px; right: 20px; background: var(--card-bg); padding: 12px 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px; z-index: 5000; transform: translateY(200px); transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); border: 1px solid var(--border-color); }
         .recent-sale.show { transform: translateY(0); }
 
-        /* --- MOBILE NAV & CART BADGE --- */
         .mobile-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 12px 0 25px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-item { text-align: center; color: var(--secondary-color); font-size: 0.7rem; cursor: pointer; opacity: 0.6; display: flex; flex-direction: column; align-items: center; transition: 0.3s; position: relative; }
         .nav-item.active { color: var(--accent-color); opacity: 1; font-weight: 700; }
@@ -132,47 +175,87 @@
         }
         .cart-bump { animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        /* --- FAQ --- */
         .faq-item { border-bottom: 1px solid var(--border-color); padding: 15px 0; cursor: pointer; }
         .faq-ans { max-height: 0; overflow: hidden; opacity: 0; transition: 0.5s ease; font-size: 0.85rem; color: var(--secondary-color); line-height: 1.5; }
         .faq-item.active .faq-ans { max-height: 200px; opacity: 1; padding-top: 10px; }
 
-        /* --- MODAL --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); backdrop-filter: blur(0px); z-index: 9600; display: none; align-items: flex-end; transition: background 0.4s ease, backdrop-filter 0.4s ease; }
         .modal-content { background: var(--card-bg); width: 100%; border-radius: 32px 32px 0 0; padding: 2.5rem 2rem; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
         .modal-overlay.active { display: flex; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); }
         .modal-overlay.active .modal-content { transform: translateY(0); }
 
-        /* --- FORMS --- */
         input, select { width: 100%; padding: 14px; border-radius: 15px; border: 1px solid var(--border-color); background: var(--bg-light); color: var(--text-color); margin-bottom: 12px; outline: none; font-family: inherit; font-size: 0.9rem; }
         label { font-size: 0.7rem; font-weight: 700; margin-bottom: 5px; display: block; color: var(--accent-color); text-transform: uppercase; }
         
         .copy-box { display: flex; align-items: center; justify-content: space-between; background: var(--bg-light); padding: 12px; border-radius: 12px; margin-top: 10px; font-weight: 700; font-size: 0.9rem; }
         
-        /* --- MENU FEATURE GRID --- */
         .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
         .feature-item { background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 20px; text-align: center; transition: 0.3s; }
         .feature-item i { color: var(--accent-color); margin-bottom: 8px; }
         .feature-item h4 { font-size: 0.75rem; font-weight: 700; }
         .feature-item p { font-size: 0.6rem; opacity: 0.6; margin-top: 4px; }
 
-        /* --- NEW PAYMENT SUMMARY --- */
         .payment-summary { background: var(--bg-light); border-radius: 15px; padding: 15px; text-align: left; margin-bottom: 15px; font-size: 0.8rem; border: 1px dashed var(--accent-color); }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .summary-row span:first-child { opacity: 0.6; }
         .summary-row span:last-child { font-weight: 700; color: var(--text-color); }
 
-        /* --- NEW UTILITIES --- */
         .stock-tag { font-size: 0.65rem; background: #fff3f3; color: #ff4757; padding: 3px 8px; border-radius: 5px; font-weight: 800; display: inline-block; margin-bottom: 5px; }
         .promo-success { font-size: 0.7rem; color: #00b894; font-weight: 800; margin-top: -5px; margin-bottom: 10px; display: none; }
 
-        /* --- NEW: TOP BUYER LIST (LEADERBOARD) --- */
         .top-list { background: var(--bg-light); border-radius: 15px; padding: 15px; margin-top: 10px; border: 1px solid var(--border-color); }
         .top-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.8rem; }
         .top-item span { font-weight: 700; color: var(--accent-color); }
+
+        /* --- TESTIMONI --- */
+        .testi-card { background: var(--bg-light); padding: 15px; border-radius: 18px; border-left: 4px solid var(--accent-color); margin-top: 10px; }
+        .testi-user { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-weight: 800; font-size: 0.75rem; }
+        .testi-text { font-size: 0.75rem; font-style: italic; opacity: 0.8; }
+
+        /* VIP AREA STYLES */
+        #vip-ff-menu { display: none; margin-top: 30px; border-top: 2px dashed var(--ramadan-gold); padding-top: 20px; animation: fadeIn 0.8s ease; }
+        .vip-status-card { background: var(--vip-gradient); color: white; border: none; }
+
+        /* --- MODERN NEWS UI STYLES --- */
+        .news-hero {
+            position: relative; height: 280px; border-radius: 32px; overflow: hidden;
+            background: #000; margin-bottom: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .news-hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .news-hero-content {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: white;
+        }
+        .news-status-badge {
+            background: var(--ramadan-gold); color: black; display: inline-block;
+            padding: 4px 10px; border-radius: 8px; font-size: 0.6rem; font-weight: 800; margin-bottom: 10px;
+        }
+        .news-list-mini { display: flex; flex-direction: column; gap: 12px; }
+        .news-mini-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px;
+            transition: 0.3s;
+        }
+        .news-mini-icon {
+            width: 45px; height: 45px; border-radius: 14px; background: var(--bg-light);
+            display: flex; align-items: center; justify-content: center; color: var(--accent-color);
+        }
     </style>
 </head>
 <body data-theme="light">
+
+    <div class="news-popup-overlay" id="newsPopup" onclick="closeNewsPopup()">
+        <div class="news-popup-content" onclick="event.stopPropagation()">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500" style="width:100%; height:200px; object-fit:cover;">
+            <div style="padding: 20px; text-align: center;">
+                <div class="news-status-badge">HOT NEWS</div>
+                <h2 style="font-size: 1.4rem; margin-bottom: 10px; color: var(--ramadan-gold);">Aimhead VIP V2 Segera Hadir!</h2>
+                <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 20px; line-height: 1.5;">Versi terbaru dengan fitur <b>Auto-Lock Head 99%</b> dan optimasi performa ramadan segera rilis. Jadilah yang pertama mendapatkannya!</p>
+                <button class="btn btn-primary" onclick="closeNewsPopup()">SAYA SIAP GACOR!</button>
+            </div>
+            <i data-lucide="x" style="position:absolute; top:15px; right:15px; color:white; cursor:pointer;" onclick="closeNewsPopup()"></i>
+        </div>
+    </div>
 
     <div class="live-banner" id="liveBanner" onclick="goToLive()">
         <div class="live-dot"></div>
@@ -202,16 +285,28 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
-        <div class="logo" style="margin-bottom: 1rem;">ZINZEN.</div>
-        
-        <div class="sidebar-title">Ramadan Tools 🌙</div>
+        <div class="user-profile-mini" id="sidebar-profile-box">
+            <div class="user-avatar"><i data-lucide="user" size="20"></i></div>
+            <div>
+                <div style="font-size: 0.8rem; font-weight: 800;" id="sb-user-name">Guest User</div>
+                <div style="font-size: 0.6rem; opacity: 0.8;" id="sb-user-status">Status: Free Member</div>
+            </div>
+        </div>
+
+        <div class="sidebar-title">Ramadan Hub 🌙</div>
         <div class="sidebar-item ramadan-item" onclick="showPage('ramadan-hub'); toggleSidebar()">
-            <i data-lucide="moon-star"></i> Ramadan Hub
+            <i data-lucide="moon-star"></i> Ramadan Tracker
         </div>
 
         <div class="sidebar-title">Menu Utama</div>
         <div class="sidebar-item" onclick="showPage('home'); toggleSidebar()"><i data-lucide="home"></i> Beranda</div>
         <div class="sidebar-item" onclick="showPage('store'); toggleSidebar()"><i data-lucide="shopping-bag"></i> Toko</div>
+        <div class="sidebar-item" onclick="showPage('ai-optimizer'); toggleSidebar()" style="color:var(--accent-color); font-weight:800;"><i data-lucide="zap"></i> AI Sensi</div>
+        
+        <div class="sidebar-item" onclick="showPage('news'); toggleSidebar()">
+            <i data-lucide="newspaper"></i> Berita & Update
+        </div>
+
         <div class="sidebar-item" onclick="showPage('faq'); toggleSidebar()"><i data-lucide="help-circle"></i> FAQ</div>
         <div class="sidebar-item" onclick="toggleTheme()"><i data-lucide="moon"></i> Ganti Tema</div>
 
@@ -235,7 +330,7 @@
     <nav>
         <div class="container nav-wrapper">
             <i data-lucide="menu" onclick="toggleSidebar()" style="cursor:pointer"></i>
-            <div class="logo" onclick="showPage('home')">ZINZEN.</div>
+            <div class="logo" id="main-logo">ZINZEN.</div>
             <i data-lucide="sun" onclick="toggleTheme()" id="t-icon" style="cursor:pointer"></i>
         </div>
     </nav>
@@ -247,6 +342,24 @@
             <div style="background: rgba(0, 184, 148, 0.1); color: #00b894; padding: 5px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; gap: 5px;">
                 <span style="width: 8px; height: 8px; background: #00b894; border-radius: 50%; animation: pulse 1.5s infinite;"></span> SERVER ONLINE
             </div>
+        </div>
+
+        <div class="card" style="padding: 1rem;">
+            <div class="progress-text">
+                <span>Progress Ramadan 1447H</span>
+                <span id="prog-val">45%</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="prog-bar"></div>
+            </div>
+            <p style="font-size: 0.6rem; opacity: 0.5; margin-top: 5px;">"Manfaatkan promo berkah sebelum hari raya!"</p>
+        </div>
+
+        <div class="category-scroll">
+            <div class="chip active" onclick="showPage('store')">Semua Produk</div>
+            <div class="chip" onclick="showPage('store')">Aimhead VIP</div>
+            <div class="chip" onclick="showPage('store')">Ultra FPS</div>
+            <div class="chip" onclick="showPage('store')">Optimasi ML</div>
         </div>
 
         <div class="card" style="background: var(--accent-gradient); color: white; border:none; text-align: center;">
@@ -264,6 +377,26 @@
                 <div class="top-item"><div>1. Syahrul**</div> <span>12 Order</span></div>
                 <div class="top-item"><div>2. AdminGans**</div> <span>8 Order</span></div>
                 <div class="top-item"><div>3. PlayerFF**</div> <span>5 Order</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4 style="margin-bottom:10px;"><i data-lucide="activity" size="16"></i> Aktivitas Terbaru</h4>
+            <div id="live-activity" style="font-size: 0.75rem; line-height: 1.8;">
+                <div><span style="color:var(--accent-color)">●</span> <b>Yoga***</b> baru saja membeli Aimhead VIP</div>
+                <div style="opacity: 0.5;"><span style="color:#00b894">●</span> <b>Rizky**</b> baru saja melakukan pembayaran</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4 style="margin-bottom:10px;"><i data-lucide="star" size="16"></i> Apa Kata Mereka?</h4>
+            <div class="testi-card">
+                <div class="testi-user"><i data-lucide="user-check" size="14"></i> Andi_Gamer</div>
+                <div class="testi-text">"Asli Aimhead-nya mantap bgt, buat mabar ramadan jadi win terus!"</div>
+            </div>
+            <div class="testi-card">
+                <div class="testi-user"><i data-lucide="user-check" size="14"></i> Sultan_FF</div>
+                <div class="testi-text">"Admin fast respon, baru bayar 5 menit langsung dikirim linknya."</div>
             </div>
         </div>
 
@@ -302,13 +435,124 @@
         </div>
     </div>
 
+    <div id="page-ai-optimizer" class="page container">
+        <h2 style="text-align:center">AI Optimizer 🤖</h2>
+        <p style="text-align:center; font-size: 0.75rem; opacity: 0.7; margin-bottom: 10px;">Rekomendasi Sensitivitas Gacor (Skala 0-200) khusus Free Fire.</p>
+        
+        <div class="card">
+            <label>Merk Perangkat</label>
+            <select id="ai-brand">
+                <option value="Xiaomi">Xiaomi / Poco</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Realme">Realme / Oppo / Vivo</option>
+                <option value="Infinix">Infinix / Tecno</option>
+                <option value="iPhone">iPhone / iPad</option>
+            </select>
+            
+            <label>RAM Perangkat</label>
+            <select id="ai-ram">
+                <option value="2">2GB - 3GB (Low End)</option>
+                <option value="4">4GB - 6GB (Mid End)</option>
+                <option value="8">8GB - 12GB+ (High End)</option>
+            </select>
+
+            <button class="btn btn-primary" onclick="generateAISensi()">DAPATKAN RACIKAN GACOR</button>
+
+            <div class="ai-res-box" id="ai-results">
+                <h4 style="text-align:center; color: var(--accent-color); margin-bottom: 10px;">HASIL SCANNING AI ⚡</h4>
+                <div class="sensi-grid">
+                    <div class="sensi-item"><span>Lihat Sekeliling</span><b id="res-gen">0</b></div>
+                    <div class="sensi-item"><span>Red Dot Sight</span><b id="res-red">0</b></div>
+                    <div class="sensi-item"><span>2x Scope</span><b id="res-2x">0</b></div>
+                    <div class="sensi-item"><span>4x Scope</span><b id="res-4x">0</b></div>
+                    <div class="sensi-item"><span>Sniper Scope</span><b id="res-snp">0</b></div>
+                    <div class="sensi-item"><span>DPI Rekomendasi</span><b id="res-dpi">0</b></div>
+                </div>
+                <div style="margin-top:15px; padding: 10px; background: rgba(9, 132, 227, 0.1); border-radius: 10px; font-size: 0.7rem;">
+                    <b>Tips Gacor:</b> Gunakan Tombol Tembak ukuran <b>45% - 52%</b> untuk mempermudah drag shot pada skala 200.
+                </div>
+            </div>
+
+            <div id="vip-ff-menu">
+                <h4 style="text-align:center; color:var(--ramadan-gold); margin-bottom: 15px;"><i data-lucide="crown"></i> VIP FF EXCLUSIVE MENU</h4>
+                <div class="sholat-grid">
+                    <div class="sholat-card" style="border-color:var(--ramadan-gold)">
+                        <i data-lucide="target" style="color:var(--ramadan-gold)"></i>
+                        <p style="font-size:0.7rem; font-weight:800; margin-top:5px;">AUTO AIM 100%</p>
+                        <span style="font-size:0.5rem; color:#00b894">ACTIVE</span>
+                    </div>
+                    <div class="sholat-card" style="border-color:var(--ramadan-gold)">
+                        <i data-lucide="zap" style="color:var(--ramadan-gold)"></i>
+                        <p style="font-size:0.7rem; font-weight:800; margin-top:5px;">NO RECOIL</p>
+                        <span style="font-size:0.5rem; color:#00b894">ACTIVE</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="margin-top:15px; background: var(--vip-gradient);" onclick="showToast('Script Injecting...')">INJECT VIP SCRIPT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="devModal" onclick="closeDevModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="text-align:center">🛠️ Developer Panel</h3>
+            <p style="font-size:0.7rem; text-align:center; opacity:0.6; margin-bottom:20px;">Gunakan akses VIP untuk fitur rahasia.</p>
+            
+            <div id="dev-form">
+                <input type="text" id="dev-user" placeholder="Username VIP">
+                <input type="password" id="dev-pw" placeholder="Password">
+                <button class="btn btn-primary" onclick="activateVIP()">LOGIN VIP</button>
+            </div>
+
+            <div id="dev-active" style="display:none; text-align:center;">
+                <h4 id="user-vip-name" style="color:var(--accent-color); margin-bottom:15px;"></h4>
+                <button class="btn btn-reguler" style="color:#ff4757; border:1px solid #ff4757" onclick="logoutVIP()">LOGOUT VIP</button>
+            </div>
+        </div>
+    </div>
+
     <div id="page-ramadan-hub" class="page container">
         <h2 style="text-align:center">Ramadan Hub 🌙</h2>
+        
         <div class="card" style="text-align: center; background: var(--ramadan-gold); color: #000; border: none;">
             <p style="font-size: 0.7rem; font-weight: 800; opacity: 0.7;">WAKTU SEKARANG</p>
             <h1 id="clock-digital">00:00:00</h1>
         </div>
+
         <div class="sholat-grid" id="jadwal-sholat-list"></div>
+
+        <div class="card">
+            <h4 style="margin-bottom: 15px;"><i data-lucide="check-square" size="16"></i> Mutaba'ah Yaumiyah</h4>
+            <div class="checklist-item" onclick="toggleTask(this)">
+                <input type="checkbox"> <span>Puasa Hari Ini</span>
+            </div>
+            <div class="checklist-item" onclick="toggleTask(this)">
+                <input type="checkbox"> <span>Sholat 5 Waktu</span>
+            </div>
+            <div class="checklist-item" onclick="toggleTask(this)">
+                <input type="checkbox"> <span>Sholat Tarawih</span>
+            </div>
+            <div class="checklist-item" onclick="toggleTask(this)">
+                <input type="checkbox"> <span>Tadarus Al-Qur'an</span>
+            </div>
+            <div class="checklist-item" onclick="toggleTask(this)">
+                <input type="checkbox"> <span>Sedekah / Infaq</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4 style="margin-bottom: 15px;"><i data-lucide="calculator" size="16"></i> Kalkulator Zakat Fitrah</h4>
+            <div class="zakat-box">
+                <label>Jumlah Anggota Keluarga</label>
+                <input type="number" id="z-count" placeholder="Contoh: 4" oninput="calcZakat()">
+                <label>Harga Beras Per Kg (IDR)</label>
+                <input type="number" id="z-price" value="15000" oninput="calcZakat()">
+                <div class="zakat-res">
+                    <span style="font-size: 0.7rem; font-weight: 700; display: block; opacity: 0.9;">TOTAL ZAKAT (Beras 2.5kg/org):</span>
+                    <h2 id="z-total">IDR 0</h2>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <h4 style="margin-bottom: 10px;"><i data-lucide="book-open" size="16"></i> Niat Puasa</h4>
             <p style="font-size: 0.85rem; line-height: 1.6; font-style: italic;">"Nawaitu shauma ghadin 'an ada'i fardhi syahri Ramadhana hadzihis sanati lillahi ta'ala."</p>
@@ -322,7 +566,7 @@
         <h2 style="text-align:center">Product Catalog</h2>
         <div class="card">
             <div class="badge">HOT</div>
-            <div class="stock-tag">Sisa Stok: 3 Lisensi</div>
+            <div class="stock-tag">Sisa Stok: <span class="stock-num">3</span> Lisensi</div>
             <h3>AimHead VIP Permanent</h3>
             <p style="font-size:0.75rem; opacity:0.6; margin: 5px 0;">Optimasi sensitivitas & auto headshot.</p>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
@@ -331,7 +575,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="stock-tag">Sisa Stok: 12 Lisensi</div>
+            <div class="stock-tag">Sisa Stok: <span class="stock-num">12</span> Lisensi</div>
             <h3>Ultra Smooth 120 FPS</h3>
             <p style="font-size:0.75rem; opacity:0.6; margin: 5px 0;">Unlock grafik ultra & FPS stabil.</p>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
@@ -421,6 +665,47 @@
         </div>
     </div>
 
+    <div id="page-news" class="page container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Berita & Update 📰</h2>
+            <div style="background: var(--bg-light); padding: 5px 12px; border-radius: 50px; font-size: 0.65rem; font-weight: 800; border: 1px solid var(--border-color);">VERSI 4.0.2</div>
+        </div>
+        
+        <div class="news-hero" onclick="openNewsPopup()">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500" alt="News Banner">
+            <div class="news-hero-content">
+                <div class="news-status-badge">COMING SOON</div>
+                <h3 style="font-size: 1.3rem; line-height: 1.2; color: var(--ramadan-gold);">🚀 Rilis: Aimhead VIP V2 Exclusive</h3>
+                <p style="font-size: 0.75rem; opacity: 0.8; margin-top: 8px;">Dapatkan fitur Ultra-Lock dan stabilitas yang lebih baik untuk mabar Ramadan.</p>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 0.65rem;">
+                    <span style="display: flex; align-items: center; gap: 4px;"><i data-lucide="calendar" size="12"></i> 10 Maret 2026</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="news-list-mini">
+            <h4 style="font-size: 0.75rem; letter-spacing: 1px; opacity: 0.6; margin: 10px 0 5px 5px;">UPDATE SEBELUMNYA</h4>
+            
+            <div class="news-mini-card">
+                <div class="news-mini-icon"><i data-lucide="server"></i></div>
+                <div style="flex: 1;">
+                    <h5 style="font-size: 0.85rem; margin-bottom: 2px;">Maintenance Server Selesai</h5>
+                    <p style="font-size: 0.65rem; opacity: 0.6;">Optimasi database transaksi telah diperbarui.</p>
+                </div>
+                <small style="font-size: 0.6rem; font-weight: 700; opacity: 0.4;">2 Mar</small>
+            </div>
+
+            <div class="news-mini-card">
+                <div class="news-mini-icon" style="color: #00b894; background: rgba(0,184,148,0.1);"><i data-lucide="shield-check"></i></div>
+                <div style="flex: 1;">
+                    <h5 style="font-size: 0.85rem; margin-bottom: 2px;">Update Anti-Ban Keamanan</h5>
+                    <p style="font-size: 0.65rem; opacity: 0.6;">Sistem keamanan versi terbaru telah aktif.</p>
+                </div>
+                <small style="font-size: 0.6rem; font-weight: 700; opacity: 0.4;">28 Feb</small>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="productModal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 id="modalProductName">Nama Produk</h3>
@@ -434,64 +719,146 @@
     <div class="mobile-nav">
         <div class="nav-item active" id="m-home" onclick="showPage('home')"><i data-lucide="home"></i><div>Home</div></div>
         <div class="nav-item" id="m-store" onclick="showPage('store')"><i data-lucide="shopping-bag"></i><div>Store</div></div>
+        
+        <div class="nav-item" onclick="showPage('store'); showToast('Flash Sale Berakhir dalam 02:45:00!')">
+            <div style="background: #ff4757; color:white; font-size: 0.5rem; padding: 2px 5px; border-radius: 4px; position:absolute; top:-10px; font-weight:800; animation: pulse 1s infinite;">SALE</div>
+            <i data-lucide="timer"></i><div>Flash</div>
+        </div>
+
+        <div class="nav-item" id="m-ai-optimizer" onclick="showPage('ai-optimizer')"><i data-lucide="zap"></i><div>AI Sensi</div></div>
         <div class="nav-item" id="m-cart" onclick="showPage('cart')">
             <div id="cart-count-badge">0</div>
             <i data-lucide="shopping-cart"></i>
             <div>Cart</div>
         </div>
-        <div class="nav-item" id="m-faq" onclick="showPage('faq')"><i data-lucide="help-circle"></i><div>Help</div></div>
     </div>
 
     <script>
         lucide.createIcons();
         new TypeIt("#typing", { strings: ["ZinZen Optimizer", "XYZ AimHead Dev"], speed: 100, loop: true }).go();
 
-        // ==========================================
-        // KONFIGURASI REMOTE (SILAKAN ISI DISINI)
-        // ==========================================
         const CONFIG = {
-            firebaseURL: "https://zinzen-default-rtdb.firebaseio.com", // Ganti dengan URL Firebase Anda
-            botToken: "8717894906:AAGuUJ1Bs99xQmjyDBnuvf_RrzySwBGAuTk", // Token dari BotFather
-            chatId: "7710470365", // ID Chat dari @userinfobot
-            tiktokLiveUrl: "https://tiktok.com/jinjennn12/live"
+            firebaseURL: "https://zinzen-default-rtdb.firebaseio.com",
+            tiktokLiveUrl: "https://tiktok.com/@username/live"
         };
 
-        // Inisialisasi Firebase
         firebase.initializeApp({ databaseURL: CONFIG.firebaseURL });
         const db = firebase.database();
 
-        // Listener Realtime Firebase
         let lastLiveStatus = false;
         db.ref("is_live").on("value", (snapshot) => {
             const isLive = snapshot.val();
             const banner = document.getElementById('liveBanner');
             const modal = document.getElementById('liveModal');
-            
             if (isLive === true) {
                 banner.style.display = 'flex';
                 modal.style.display = 'flex';
-                // Jika baru berubah jadi TRUE, ledakkan kembang api
-                if(!lastLiveStatus) {
-                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 30000 });
-                }
-            } else {
-                banner.style.display = 'none';
-                modal.style.display = 'none';
-            }
+                if(!lastLiveStatus) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 30000 });
+            } else { banner.style.display = 'none'; modal.style.display = 'none'; }
             lastLiveStatus = isLive;
         });
 
         function closeLiveModal() { document.getElementById('liveModal').style.display = 'none'; }
         function goToLive() { window.open(CONFIG.tiktokLiveUrl, '_blank'); }
 
-        // ==========================================
+        /* --- POPUP LOGIC (LANDING PAGE) --- */
+        function openNewsPopup() {
+            const popup = document.getElementById('newsPopup');
+            if(popup) {
+                popup.style.display = 'flex';
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, zIndex: 40000 });
+            }
+        }
+        function closeNewsPopup() {
+            const popup = document.getElementById('newsPopup');
+            if(popup) popup.style.display = 'none';
+        }
 
         let cart = [];
         let tempProduct = null;
         let discount = 0;
         let userData = { name: "", wa: "", game: "", id: "", method: "" };
 
-        // RAMADAN HUB LOGIC
+        // AI OPTIMIZER
+        function generateAISensi() {
+            const ram = document.getElementById('ai-ram').value;
+            const brand = document.getElementById('ai-brand').value;
+            let base = ram === "2" ? 185 : (ram === "4" ? 170 : 155);
+            if (brand === "iPhone") base -= 40;
+            else if (brand === "Xiaomi" || brand === "Infinix") base += 10;
+
+            document.getElementById('res-gen').innerText = base;
+            document.getElementById('res-red').innerText = base - 5;
+            document.getElementById('res-2x').innerText = base - 10;
+            document.getElementById('res-4x').innerText = base - 15;
+            document.getElementById('res-snp').innerText = Math.floor(base / 2.5);
+            
+            let aiDpi = brand === "iPhone" ? "Default" : Math.floor(base * 2.5);
+            if (aiDpi !== "Default" && aiDpi > 700) aiDpi = 700;
+            document.getElementById('res-dpi').innerText = aiDpi;
+            
+            document.getElementById('ai-results').style.display = "block";
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 } });
+            showToast("🎯 Sensitivitas AI Berhasil Diracik!");
+        }
+
+        // --- DEV MODE & VIP LOGIC ---
+        let logoClicks = 0;
+        document.getElementById('main-logo').addEventListener('click', () => {
+            logoClicks++;
+            if (logoClicks === 5) {
+                const modal = document.getElementById('devModal');
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('active'), 10);
+                logoClicks = 0;
+                updateDevUI();
+            }
+            setTimeout(() => { logoClicks = 0; }, 2000);
+        });
+
+        function closeDevModal() {
+            const modal = document.getElementById('devModal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.style.display = 'none', 400);
+        }
+
+        function activateVIP() {
+            const user = document.getElementById('dev-user').value;
+            const pw = document.getElementById('dev-pw').value;
+            if (user && pw) {
+                localStorage.setItem('is_vip', 'true');
+                localStorage.setItem('vip_user', user);
+                confetti({ particleCount: 150, spread: 70 });
+                showToast("VIP AKSES AKTIF!");
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+
+        function logoutVIP() {
+            localStorage.removeItem('is_vip');
+            localStorage.removeItem('vip_user');
+            location.reload();
+        }
+
+        function updateDevUI() {
+            if (localStorage.getItem('is_vip') === 'true') {
+                document.getElementById('dev-form').style.display = 'none';
+                document.getElementById('dev-active').style.display = 'block';
+                document.getElementById('user-vip-name').innerText = "Logged as VIP: " + localStorage.getItem('vip_user');
+            }
+        }
+
+        function applyVIPAccess() {
+            if (localStorage.getItem('is_vip') === 'true') {
+                const user = localStorage.getItem('vip_user');
+                document.getElementById('sb-user-name').innerText = user;
+                document.getElementById('sb-user-status').innerText = "Status: VIP MEMBER";
+                document.getElementById('sidebar-profile-box').style.background = "var(--vip-gradient)";
+                document.getElementById('vip-ff-menu').style.display = 'block';
+            }
+        }
+        // --- END DEV MODE ---
+
         const jadwalSholat = [
             {nama: 'Imsak', jam: '04:32'}, {nama: 'Subuh', jam: '04:42'},
             {nama: 'Dzuhur', jam: '12:05'}, {nama: 'Ashar', jam: '15:14'},
@@ -512,11 +879,10 @@
             });
         }
 
-        function updateClock() {
+        setInterval(() => {
             const el = document.getElementById('clock-digital');
             if(el) el.innerText = new Date().toLocaleTimeString('id-ID', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
+        }, 1000);
 
         function updateRamadanTimer() {
             const now = new Date();
@@ -535,25 +901,50 @@
         setInterval(updateRamadanTimer, 60000);
         updateRamadanTimer();
 
-        // STORE & CART LOGIC
+        function toggleTask(el) {
+            const cb = el.querySelector('input');
+            cb.checked = !cb.checked;
+            el.classList.toggle('done', cb.checked);
+            if(cb.checked) confetti({ particleCount: 30, spread: 60, origin: { y: 0.8 } });
+        }
+
+        function calcZakat() {
+            const count = document.getElementById('z-count').value || 0;
+            const price = document.getElementById('z-price').value || 0;
+            const total = count * (2.5 * price);
+            document.getElementById('z-total').innerText = "IDR " + total.toLocaleString('id-ID');
+        }
+
+        function updateRamadanProgress() {
+            const start = new Date('2026-02-18');
+            const end = new Date('2026-03-19');
+            const now = new Date();
+            if (now < start) return;
+            let percent = Math.floor(((now - start) / (end - start)) * 100);
+            if(percent > 100) percent = 100;
+            document.getElementById('prog-bar').style.width = percent + '%';
+            document.getElementById('prog-val').innerText = percent + '%';
+        }
+        updateRamadanProgress();
+
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + id).classList.add('active');
+            const target = document.getElementById('page-' + id);
+            if(target) target.classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if(document.getElementById('m-'+id)) document.getElementById('m-'+id).classList.add('active');
+            
             if(id === 'cart') renderCart();
-            if(id === 'ramadan-hub') renderJadwal();
+            
+            lucide.createIcons();
             window.scrollTo(0,0);
         }
 
         function updateCartBadge() {
             const badge = document.getElementById('cart-count-badge');
             if (cart.length > 0) {
-                badge.innerText = cart.length;
-                badge.style.display = 'flex';
-                badge.classList.remove('cart-bump');
-                void badge.offsetWidth; 
-                badge.classList.add('cart-bump');
+                badge.innerText = cart.length; badge.style.display = 'flex';
+                badge.classList.remove('cart-bump'); void badge.offsetWidth; badge.classList.add('cart-bump');
             } else { badge.style.display = 'none'; }
         }
 
@@ -564,9 +955,7 @@
 
         function toggleTheme() {
             const b = document.body;
-            const isDark = b.getAttribute('data-theme') === 'dark';
-            b.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            lucide.createIcons();
+            b.setAttribute('data-theme', b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
 
         function openProductModal(name, price, desc) {
@@ -575,19 +964,21 @@
             document.getElementById('modalProductDesc').innerText = desc;
             document.getElementById('modalProductPrice').innerText = "IDR " + price.toLocaleString();
             const modal = document.getElementById('productModal');
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('active'), 10);
+            modal.style.display = 'flex'; setTimeout(() => modal.classList.add('active'), 10);
         }
 
         function closeModal() { 
             const modal = document.getElementById('productModal');
-            modal.classList.remove('active');
-            setTimeout(() => modal.style.display = 'none', 400);
+            modal.classList.remove('active'); setTimeout(() => modal.style.display = 'none', 400);
         }
 
         function processBuy(type) {
             if(type === 'direct') { cart = [tempProduct]; showPage('checkout'); }
-            else { cart.push(tempProduct); updateCartBadge(); }
+            else { 
+                cart.push(tempProduct); 
+                updateCartBadge();
+                showToast("🛒 Berhasil ditambah ke keranjang!");
+            }
             closeModal();
         }
 
@@ -606,18 +997,13 @@
         function removeFromCart(index) { cart.splice(index, 1); renderCart(); updateCartBadge(); }
         function clearCart() { cart = []; renderCart(); updateCartBadge(); }
 
-        // PROMO LOGIC
         function applyPromo() {
             const code = document.getElementById('c-promo').value.toUpperCase();
             if(code === 'BERKAH') {
                 discount = 5000;
                 document.getElementById('promo-success-msg').style.display = 'block';
-                alert("Kode Promo BERKAH berhasil! Diskon IDR 5.000 terpasang.");
-            } else {
-                discount = 0;
-                document.getElementById('promo-success-msg').style.display = 'none';
-                alert("Kode promo tidak valid.");
-            }
+                showToast("🎁 Promo Berhasil Dipasang!");
+            } else { discount = 0; document.getElementById('promo-success-msg').style.display = 'none'; showToast("Kode tidak valid", "error"); }
         }
 
         function validateCheckout() {
@@ -628,23 +1014,20 @@
                 id: document.getElementById('c-game-id').value,
                 method: document.getElementById('c-method').value
             };
-
-            if(!userData.name || !userData.wa || !userData.game || !userData.id) return alert("Lengkapi data Anda!");
+            if(!userData.name || !userData.wa || !userData.game || !userData.id) return showToast("Lengkapi data Anda!", "error");
+            
+            if (localStorage.getItem('is_vip') !== 'true') {
+                 document.getElementById('sb-user-name').innerText = userData.name;
+            }
 
             let total = cart.reduce((a, b) => a + b.price, 0);
-            let finalPrice = total - discount;
-            if(finalPrice < 0) finalPrice = 0;
-
-            const sumBox = document.getElementById('payment-summary-box');
-            sumBox.innerHTML = `
+            let finalPrice = Math.max(0, total - discount);
+            document.getElementById('payment-summary-box').innerHTML = `
                 <div class="summary-row"><span>Pembeli</span><span>${userData.name}</span></div>
                 <div class="summary-row"><span>Game</span><span>${userData.game}</span></div>
                 <div class="summary-row"><span>ID Akun</span><span>${userData.id}</span></div>
-                <div class="summary-row"><span>Total Item</span><span>${cart.length}</span></div>
-                ${discount > 0 ? `<div class="summary-row"><span style="color:#00b894">Diskon Kupon</span><span style="color:#00b894">-IDR 5.000</span></div>` : ''}
-                <div class="summary-row"><span>Metode</span><span>${userData.method}</span></div>
+                ${discount > 0 ? `<div class="summary-row"><span style="color:#00b894">Diskon</span><span style="color:#00b894">-IDR 5.000</span></div>` : ''}
             `;
-
             document.getElementById('final-price').innerText = "IDR " + finalPrice.toLocaleString();
             document.getElementById('payment-loader').style.display = 'flex';
             setTimeout(() => { document.getElementById('payment-loader').style.display = 'none'; showPage('payment'); }, 1500);
@@ -652,31 +1035,64 @@
 
         function sendWhatsApp() {
             const totalText = document.getElementById('final-price').innerText;
-            const itemNames = cart.map(i => i.name).join(", ");
-            const message = `*KONFIRMASI PEMBAYARAN - ZINZEN*\n----------------------------------------\n👤 *Nama:* ${userData.name}\n🎮 *Game:* ${userData.game}\n🆔 *ID Akun:* ${userData.id}\n📦 *Produk:* ${itemNames}\n💳 *Metode:* ${userData.method}\n💰 *Total:* ${totalText}\n----------------------------------------\nSaya sudah melakukan transfer. Mohon diproses Admin.`;
+            const message = `*KONFIRMASI PEMBAYARAN - ZINZEN*\n👤 *Nama:* ${userData.name}\n🎮 *Game:* ${userData.game}\n🆔 *ID:* ${userData.id}\n📦 *Produk:* ${cart.map(i => i.name).join(", ")}\n💰 *Total:* ${totalText}`;
             window.open(`https://wa.me/62895603290359?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        function copyNumber(num) { navigator.clipboard.writeText(num); alert("Tersalin!"); }
+        function copyNumber(num) { 
+            navigator.clipboard.writeText(num); 
+            showToast("✅ Berhasil disalin!");
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: ${type === 'success' ? 'var(--accent-gradient)' : '#ff4757'}; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; z-index: 10000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease;`;
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.animation = "fadeOut 0.3s ease forwards"; setTimeout(() => toast.remove(), 300); }, 2700);
+        }
+
         function toggleFaq(el) { el.classList.toggle('active'); }
 
-        // Particles & Fake Notif
-        setInterval(() => {
-            const p = document.createElement('div');
-            p.className = 'particle'; p.textContent = '🌙';
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 5000);
-        }, 2000);
+        const formFields = ['c-name', 'c-wa', 'c-game-id'];
+        formFields.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.value = localStorage.getItem('zinzen_' + id) || '';
+                if(id === 'c-name' && el.value && localStorage.getItem('is_vip') !== 'true') document.getElementById('sb-user-name').innerText = el.value;
+                el.addEventListener('input', (e) => localStorage.setItem('zinzen_' + id, e.target.value));
+            }
+        });
 
+        // DECORATIONS (Particles)
         setInterval(() => {
-            let box = document.querySelector('.recent-sale') || document.createElement('div');
-            box.className = 'recent-sale'; document.body.appendChild(box);
-            box.innerHTML = `<div style="font-size: 0.75rem;"><b>Seorang User</b> baru saja membeli <br><span style="color: var(--accent-color); font-weight:700;">AimHead VIP Ramadan</span></div>`;
-            box.classList.add('show');
-            setTimeout(() => box.classList.remove('show'), 4000);
-        }, 25000);
+            const p = document.createElement('div'); p.className = 'particle'; p.textContent = '🌙';
+            p.style.left = Math.random() * 100 + 'vw'; p.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(p); setTimeout(() => p.remove(), 5000);
+        }, 3000);
+
+        // Social Proof
+        const fakeNames = ["Rizky", "Sultan", "BocilFF", "AdminGans", "Yoga", "Andi", "Putra", "Zul", "Eko", "Daus"];
+        const fakeProducts = ["AimHead VIP", "Ultra Smooth 120 FPS", "Optimasi ML", "VIP Injector"];
+
+        function showRecentSale() {
+            const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            const product = fakeProducts[Math.floor(Math.random() * fakeProducts.length)];
+            const saleToast = document.createElement('div');
+            saleToast.className = 'recent-sale show';
+            saleToast.innerHTML = `<div style="background: var(--accent-gradient); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;"><i data-lucide="shopping-cart" size="16"></i></div><div><div style="font-size: 0.7rem; font-weight: 800;">${name}*** Baru Saja Membeli</div><div style="font-size: 0.6rem; opacity: 0.7;">${product} - Berhasil diaktivasi</div></div>`;
+            document.body.appendChild(saleToast);
+            lucide.createIcons();
+            setTimeout(() => { saleToast.classList.remove('show'); setTimeout(() => saleToast.remove(), 500); }, 4000);
+        }
+        setInterval(showRecentSale, Math.random() * (30000 - 20000) + 20000);
+
+        // --- LANDING PAGE AUTO TRIGGER ---
+        window.onload = () => {
+            applyVIPAccess();
+            // Trigger Pop-up Aimhead V2 otomatis saat masuk website
+            setTimeout(openNewsPopup, 1000);
+        };
     </script>
 </body>
 </html>
