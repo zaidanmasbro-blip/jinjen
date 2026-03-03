@@ -81,6 +81,15 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-color); transition: background var(--transition); padding-bottom: 100px; overflow-x: hidden; }
         .container { max-width: 500px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
 
+        /* --- MAINTENANCE STYLE --- */
+        .card.maintenance { opacity: 0.7; position: relative; overflow: hidden; pointer-events: none; }
+        .card.maintenance::after {
+            content: "MAINTENANCE"; position: absolute; top: 20px; right: -30px;
+            background: #636e72; color: white; padding: 5px 35px; transform: rotate(45deg);
+            font-size: 0.6rem; font-weight: 900; z-index: 10;
+        }
+        .btn-maintenance { background: #b2bec3 !important; color: white !important; cursor: not-allowed; }
+
         .timer-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--ramadan-gold); border-radius: 15px; padding: 10px; margin-top: 15px; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--ramadan-gold); }
 
         /* --- RAMADAN HUB STYLES --- */
@@ -574,13 +583,19 @@
                 <button class="btn btn-primary" style="width:auto; padding: 8px 20px;" onclick="openProductModal('AimHead VIP', 25000, 'Fitur VIP: Anti-Shake, Lock Head 90%, Safe for Main ID.')">Beli</button>
             </div>
         </div>
-        <div class="card">
-            <div class="stock-tag">Sisa Stok: <span class="stock-num">12</span> Lisensi</div>
-            <h3>Ultra Smooth 120 FPS</h3>
-            <p style="font-size:0.75rem; opacity:0.6; margin: 5px 0;">Unlock grafik ultra & FPS stabil.</p>
+
+        <div class="card maintenance">
+            <div class="stock-tag">Sisa Stok: <span class="stock-num">0</span> Lisensi</div>
+            <h3>XYZ Noctra</h3>
+            <p style="font-size:0.75rem; opacity:0.6; margin: 5px 0;">Meringankan drag, drag lebih stabil.</p>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
-                <b style="color:var(--accent-color)">IDR 35.000</b>
-                <button class="btn btn-primary" style="width:auto; padding: 8px 20px;" onclick="openProductModal('Ultra Smooth FPS', 35000, 'Fitur FPS: Unlock 90/120 FPS, No Overheat, Smooth Gameplay.')">Beli</button>
+                <b style="color:var(--secondary-color); opacity: 0.5;">IDR 15.000</b>
+                <button class="btn btn-maintenance" style="width:auto; padding: 8px 20px;">MAINTENANCE</button>
+            </div>
+        </div>
+
+        
+                
             </div>
         </div>
     </div>
@@ -857,7 +872,6 @@
                 document.getElementById('vip-ff-menu').style.display = 'block';
             }
         }
-        // --- END DEV MODE ---
 
         const jadwalSholat = [
             {nama: 'Imsak', jam: '04:32'}, {nama: 'Subuh', jam: '04:42'},
@@ -1073,7 +1087,7 @@
 
         // Social Proof
         const fakeNames = ["Rizky", "Sultan", "BocilFF", "AdminGans", "Yoga", "Andi", "Putra", "Zul", "Eko", "Daus"];
-        const fakeProducts = ["AimHead VIP", "Ultra Smooth 120 FPS", "Optimasi ML", "VIP Injector"];
+        const fakeProducts = ["AimHead VIP", "XYZ Actra", "Optimasi ML", "VIP Injector"];
 
         function showRecentSale() {
             const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
@@ -1090,7 +1104,6 @@
         // --- LANDING PAGE AUTO TRIGGER ---
         window.onload = () => {
             applyVIPAccess();
-            // Trigger Pop-up Aimhead V2 otomatis saat masuk website
             setTimeout(openNewsPopup, 1000);
         };
     </script>
